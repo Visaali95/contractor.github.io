@@ -5,6 +5,7 @@ const passport      = require('passport');
 const pe            = require('parse-error');
 const cors          = require('cors');
 const v1 = require('./routes/v1');
+const postjob = require('./routes/postjob');
 
 const app = express();
 
@@ -25,8 +26,10 @@ const models = require("./models");
 
 // CORS
 app.use(cors());
+app.set('view engine', 'jade');
 
 app.use('/api', v1);
+app.use('/api/postjob', postjob);
 
 app.use('/', function(req, res){
 	res.statusCode = 200;//send the appropriate status code
