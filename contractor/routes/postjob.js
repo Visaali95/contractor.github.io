@@ -9,17 +9,17 @@ router.post('/postjob', (req, res, next) => {
   let obj = [
     {
       jobTitle:req.body.jobTitle,
-      quote:req.body.quote,
+      isQuote:req.body.isQuote,//quote - 1 fixed - 0
       jobLocation:req.body.jobLocation,
       propertyType:req.body.propertyType,
       jobStart:req.body.jobStart,
       postExpiry:req.body.postExpiry,
-      interior:req.body.interior,//interior or exterrior
-      newConstruction:req.body.newConstruction,//new construction or renovation
-      occupied:req.body.occupied,//occupied or vacant
-      materialSupplied:req.body.materialSupplied,//if partial take input fileds(all,partial,none)
-      toolsSupplied:req.body.toolsSupplied,//if partial take input fileds(all,partial,none)
-      postAs:req.body.postAs,//full or line height
+      isInterior:req.body.isInterior,//interior - 1 or exterrior - 2
+      isNewConstruction:req.body.isNewConstruction,//new construction - 1 or renovation - 2
+      isOccupied:req.body.isOccupied,//occupied -1 or vacant - 2
+      isMaterialSupplied:req.body.isMaterialSupplied,//if partial take input fileds(all - 1 partial - 2 ,none - 3)
+      isToolsSupplied:req.body.isToolsSupplied,//if partial take input fileds(all - 1,partial - 2 ,none - 3)
+      isPostAs:req.body.isPostAs,//full - 1 or line height - 2
     }
   ];
   var postJobSave = new postJobs(req.body)
