@@ -7,6 +7,7 @@ const cors          = require('cors');
 const path          = require('path');
 const v1 = require('./routes/v1');
 const postjob = require('./routes/postjob');
+const addrooms = require('./routes/addrooms');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.set('view engine', 'html');
 
 app.use('/api', v1);
 app.use('/api', postjob);
+app.use('/api', addrooms);
 
 app.use('/', function(req, res){
 	res.statusCode = 200;//send the appropriate status code
