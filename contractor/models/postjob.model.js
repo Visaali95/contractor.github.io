@@ -1,12 +1,12 @@
-const mongoose 			= require('mongoose');
+const mongoose 	= require('mongoose');
 
-var PostJobSchema = new mongoose.Schema({
+const PostJobSchema = new mongoose.Schema({
         jobTitle:String,
         quote:String,
         jobLocation:String,
         propertyType:String,
-        jobStart:Date,
-        postExpiry:Date,
+        jobStart:String,
+        postExpiry:String,
         interior:String,//interior or exterrior
         newConstruction:String,//new construction or renovation
         occupied:String,//occupied or vacant
@@ -16,5 +16,5 @@ var PostJobSchema = new mongoose.Schema({
      });
 
 
-var PostJob = mongoose.model("PostJob", PostJobSchema);
-module.exports = { PostJob };
+const postJobs = mongoose.model("postJobs", PostJobSchema);
+module.exports = postJobs;

@@ -4,6 +4,7 @@ const bodyParser 	= require('body-parser');
 const passport      = require('passport');
 const pe            = require('parse-error');
 const cors          = require('cors');
+const path          = require('path');
 const v1 = require('./routes/v1');
 const postjob = require('./routes/postjob');
 
@@ -18,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Passport
 app.use(passport.initialize());
-
 //Log Env
 console.log("Environment:", CONFIG.app)
 //DATABASE
@@ -26,10 +26,20 @@ const models = require("./models");
 
 // CORS
 app.use(cors());
-app.set('view engine', 'jade');
+// Require static assets from public folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set 'views' directory for any views
+// being rendered res.render()
+app.set('views', path.join(__dirname, 'views'));
+
+// Set view engine as EJS
+app.engine('html', require('jade').renderFile);
+app.set('view engine', 'html');
+
 
 app.use('/api', v1);
-app.use('/api/postjob', postjob);
+app.use('/api', postjob);
 
 app.use('/', function(req, res){
 	res.statusCode = 200;//send the appropriate status code
@@ -45,13 +55,14 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+	console.log(err)
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({'error' : "err"});
 });
 
 module.exports = app;

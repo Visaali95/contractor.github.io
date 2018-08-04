@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const PostJobController 	= require('../controllers/postjob.controller');
-const mongoose = require('mongoose');
+//const PostJobController 	= require('../controllers/postjob.controller');
+const postJobs = require("../models/postjob.model");
 
 
 // create the details
-router.post('/abc', (req, res, next) => {
-  let postjobs = [
+router.post('/postjob', (req, res, next) => {
+  let obj = [
     {
       jobTitle:req.body.jobTitle,
       quote:req.body.quote,
@@ -22,14 +22,14 @@ router.post('/abc', (req, res, next) => {
       postAs:req.body.postAs,//full or line height
     }
   ];
-
-  PostJob.collection.insert(postjobs, function(err, docs) {
+  var postJobSave = new postJobs(req.body)
+  postJobSave.save(function(err, docs) {
     if (err) {
-      return console.error(err);
+      console.error(err);
     } else {
       console.log("documents inserted to Collection");
-      console.log(postjobs);
-      res.send(postjobs);
+      console.log(docs);
+      res.json(docs);
     }
   });
 });

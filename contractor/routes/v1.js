@@ -4,7 +4,7 @@ const router 			= express.Router();
 const UserController 	= require('../controllers/user.controller');
 const CompanyController = require('../controllers/company.controller');
 const HomeController 	= require('../controllers/home.controller');
-
+// const postjob = require('../controllers/postjob.controller');
 const custom 	        = require('./../middleware/custom');
 
 const passport      	= require('passport');
@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
   res.json({status:"success", message:"Parcel Pending API", data:{"version_number":"v1.0.0"}})
 });
 
-
+// router.post(    '/jobs',            postjob.create);
 router.post(    '/users',           UserController.create);                                                    // C
 router.get(     '/users',           passport.authenticate('jwt', {session:false}), UserController.get);     //   // R
 router.put(     '/users',           passport.authenticate('jwt', {session:false}), UserController.update);     // U
