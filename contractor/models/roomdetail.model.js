@@ -1,5 +1,5 @@
 const mongoose 	= require('mongoose');
-const postJobs = require('./postjob.model');
+const Jobs = require('./job.model');
 const addRooms = require('./addrooms.model');
 const RoomDetailSchema = new mongoose.Schema({
         type_interior: Number,
@@ -7,7 +7,7 @@ const RoomDetailSchema = new mongoose.Schema({
         name:String,
      });
      RoomDetailSchema.virtual('interior', {
-            ref: 'postJobs', // The model to use
+            ref: 'Jobs', // The model to use
             localField: 'type_interior', // roomdetails field name
             foreignField: 'isInterior', // user field name
             // If `justOne` is true, 'members' will be a single doc as opposed to

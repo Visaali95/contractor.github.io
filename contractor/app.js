@@ -6,9 +6,10 @@ const pe            = require('parse-error');
 const cors          = require('cors');
 const path          = require('path');
 const v1 = require('./routes/v1');
-const postjob = require('./routes/postjob');
+const job = require('./routes/job');
 const addrooms = require('./routes/addrooms');
 const roomdetail = require('./routes/roomdetail');
+const roomdropdown = require('./routes/roomdropdown');
 
 const app = express();
 
@@ -41,9 +42,10 @@ app.set('view engine', 'html');
 
 
 app.use('/api', v1);
-app.use('/api', postjob);
+app.use('/api', job);
 app.use('/api', addrooms);
 app.use('/api', roomdetail);
+app.use('/api', roomdropdown);
 
 app.use('/', function(req, res){
 	res.statusCode = 200;//send the appropriate status code
