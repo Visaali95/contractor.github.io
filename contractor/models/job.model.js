@@ -1,7 +1,8 @@
 const mongoose 	= require('mongoose');
+const User = require('./user.model');
 const addRoomsSchema = new mongoose.Schema({
 
-    Rooms:{
+    Room:{
       type:Number,
       enum:[1,2,3,4],
     },
@@ -10,11 +11,17 @@ const addRoomsSchema = new mongoose.Schema({
       required:true,
     }
 
-})
+},{ _id:false,
+  versionKey:false})
 const JobSchema = new mongoose.Schema({
+        user_id:{
+          type: mongoose.Schema.Types.ObjectId,
+          ref:'User'
+        },
         jobTitle:{
           type:String,
           required:true,
+          trim:true,
         },
         isQuote:{
           type:Number,
@@ -23,10 +30,12 @@ const JobSchema = new mongoose.Schema({
         jobLocation:{
           type:String,
           required:true,
+          trim:true,
         },
         propertyType:{
           type:String,
           required:true,
+          trim:true,
         },
         jobStart:{
                 		type: Date,
@@ -59,8 +68,10 @@ const JobSchema = new mongoose.Schema({
                               enum: [1,2,3],
                             },//if partial take input fileds(all - 1 partial - 2 ,none - 3),//if partial take input fileds(all - 1,partial - 2 ,none - 3)
         isPostAs:Number, //full - 1 or line height - 2
-        addRoom:addRoomsSchema,
-     });
+        addRoom:[addRoomsSchema],
+     },{versionKey:false});
+
+
 
 const addRooms = mongoose.model("addRooms",addRoomsSchema);
 const Jobs = mongoose.model("Jobs", JobSchema);

@@ -1,9 +1,7 @@
-const { User }      = require('../models');
 const authService   = require('../services/auth.service');
 const { to, ReE, ReS }  = require('../services/util.service');
-
-const create = async function(req, res){
-    res.setHeader('Content-Type', 'application/json');
+const User = require("../models/user.model")
+const create = function(req, res){
     const body = req.body;
     if(!body.email && !body.phone && body.fbid && body.twitterid && body.pintrestid && body.instaid){
         return ReE(res, 'Please enter an email or phone number or social media to register.');
@@ -13,12 +11,18 @@ const create = async function(req, res){
         return ReE(res, 'Please enter a postcode');
     }else{
         let err, user;
+user = new User(body);
+return user.save().then((user)=>{
+  return user.generateAuthToken().then((token)=> {
+    return ReS(res, {message:'Successfully created new user.', user:user, token:token}, 201);
 
-        [err, user] = await to(authService.createUser(body));
+  })
+}).catch((e)=> {
+  return ReE(res, e, 422);
 
-        if(err) return ReE(res, err, 422);
-        return ReS(res, {message:'Successfully created new user.', user:user.toWeb(), token:user.getJWT()}, 201);
-    }
+})
+
+      }
 }
 module.exports.create = create;
 
@@ -61,16 +65,16 @@ const update = async function(req, res){
                     }
                    // console.log("RESULT: " + result);
                      return ReS(res, {message:"Updated Successfully"});
-                }); 
+                });
             }
-            
-            
+
+
 
         }else{
             return ReE(res, 'Invalid user token');
         }
-        
-         
+
+
 
     });
     //console.log(user);
@@ -114,7 +118,7 @@ const login = async function(req, res){
     const body = req.body;
     let err, user;
     //return ReS(res, {token:body});
-    
+
     [err, user] = await to(authService.authUser(req.body));
     if(err) return ReE(res, err, 422);
 
