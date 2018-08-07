@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const passport      	= require('passport');
 const Jobs = require("../models/job.model");
 const {jwt_middleware} = require('../middleware/jwt.middleware');
 const {jobController} = require('../controllers/job.controller')

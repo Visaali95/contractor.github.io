@@ -1,5 +1,36 @@
 const mongoose 	= require('mongoose');
 const User = require('./user.model');
+const lineHeightSchema = new mongoose.Schema({
+   jobTitle:{
+     type:String,
+     required:true,
+   },
+   floorLevel:{
+     type:Number,
+     required:true,
+   },
+   jobArea:{
+     type:Number,
+     required:true,
+   },
+   desc:{
+     type:String,
+   },
+   isFixed:{
+     type:Number,
+     enum:[0,1],
+   },
+   cost:{
+     type:Number,
+     required:true,
+   },
+  total:{
+    type:Number,
+    required:true,
+  }
+},{_id:false,
+  versionKey:false,
+timestamps:true})
 const addRoomsSchema = new mongoose.Schema({
 
     Room:{
@@ -9,7 +40,9 @@ const addRoomsSchema = new mongoose.Schema({
     details:{
       type:Number,
       required:true,
-    }
+    },
+    lineHeight:[lineHeightSchema],
+
 
 },{ _id:false,
   versionKey:false})
@@ -72,7 +105,7 @@ const JobSchema = new mongoose.Schema({
      },{versionKey:false});
 
 
-
+const lineHeight = mongoose.model("lineHeight",lineHeightSchema);
 const addRooms = mongoose.model("addRooms",addRoomsSchema);
 const Jobs = mongoose.model("Jobs", JobSchema);
 module.exports = Jobs;
