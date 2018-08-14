@@ -1,6 +1,10 @@
 const express 			= require('express');
 const router 			= express.Router();
 
+const dashboardController = require('../controllers/dashboard.controller')
+const validateotpController = require('../controllers/validateotp.controller')
+const forgotPasswordController = require('../controllers/forgotpassword.controller')
+const jobController = require('../controllers/job.controller');
 const UserController 	= require('../controllers/user.controller');
 const CompanyController = require('../controllers/company.controller');
 const HomeController 	= require('../controllers/home.controller');
@@ -30,7 +34,21 @@ router.get(     '/companies/:company_id', passport.authenticate('jwt', {session:
 router.put(     '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.update);  // U
 router.delete(  '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.remove);  // D
 
-router.get('/dash', passport.authenticate('jwt', {session:false}),HomeController.Dashboard)
+router.get('/draftjob/:user_id',passport.authenticate('jwt', {session:false}),jobController.draftjob)
+
+router.get('/jobdetails/:job_id',passport.authenticate('jwt', {session:false}),jobController.jobDetails)
+
+router.post('/forgotpassword',forgotPasswordController.create)
+
+router.post('/validateotp',validateotpController.create)
+
+router.get('/dashboard/:user_id',passport.authenticate('jwt', {session:false}),jobController.DashboardDetails)
+
+router.post('/jobcreate/:_id',passport.authenticate('jwt', {session:false}),jobController.create)
+
+router.post('/lineheight/:_id',passport.authenticate('jwt', {session:false}),jobController.updatelineheights)
+
+router.post('/rooms/:_id',passport.authenticate('jwt', {session:false}),jobController.updaterooms)
 
 
 //********* API DOCUMENTATION **********

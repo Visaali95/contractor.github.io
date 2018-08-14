@@ -33,26 +33,36 @@ const createUser = async function(userInfo){
 
     auth_info={}
     auth_info.status='create';
-
+       
     unique_key = getUniqueKeyFromBody(userInfo);
     if(!unique_key) TE('An email or phone number or social media was not entered.');
-
+	
     let validationError ='';
-    if(validator.isEmail(unique_key)){
+    if(userInfo.email!=''){
         //console.log(userInfo);
-        auth_info.method = 'email';
-        userInfo.email = unique_key;
-        [err, user] = await to(User.findOne({email:unique_key }));
-        //console.log(JSON.stringify(user));
-        if(Boolean(user)) TE('Email id already exits');
+		if(validator.isEmail(userInfo.email)){
+			auth_info.method = 'email';
+			//userInfo.email = unique_key;
+			[err, user] = await to(User.findOne({email:userInfo.email }));
+			//console.log(JSON.stringify(user));
+			if(Boolean(user)) TE('Email id already exits');
+		}else{
+			TE('wrong emailid format');
+		}
 
     }
-
-    if(validator.isMobilePhone(unique_key, 'any')){//checks if only phone number was sent
-        auth_info.method = 'phone';
-        userInfo.phone = unique_key;
-        [err, user] = await to(User.findOne({phone:phone }));
+	
+    if(userInfo.phone!=''){//checks if only phone number was sent
+         //console.log("ddd"+userInfo.phone);
+		 if(validator.isMobilePhone(userInfo.phone, 'any')){
+		auth_info.method = 'phone';
+		console.log('kdkdk');
+        [err, user] = await to(User.findOne({phone:userInfo.phone }));
+		 if(err) TE(err.message);
         if(Boolean(user)) TE('Phone number already exits');
+		 }else{
+			 TE('wrong phone format');
+		 }
         //[err, user] = await to(User.create(userInfo));
         //if(err) TE('user already exists' +JSON.stringify(err));
 
@@ -90,11 +100,12 @@ const createUser = async function(userInfo){
 module.exports.createUser = createUser;
 
 const authUser = async function(userInfo){//returns token
+    
     let unique_key;
     let auth_info = {};
     auth_info.status = 'login';
     unique_key = getUniqueKeyFromBody(userInfo);
-    
+   
 
     if(!unique_key) TE('Please enter an email or phone number or social media to login');
 
@@ -102,19 +113,29 @@ const authUser = async function(userInfo){//returns token
     if((userInfo.email || userInfo.phone) && (!userInfo.password)) TE('Please enter a password to login');
 
     let user,emailphone;
-    if(validator.isEmail(unique_key)){
-        auth_info.method='email';
-        emailphone =1;
-        [err, user] = await to(User.findOne({email:unique_key }));
-        if(err) TE(err.message);
+    if(userInfo.email!='' && userInfo.email != undefined){
+        console.log("email"+userInfo.email);
+        if(validator.isEmail(userInfo.email)){
+            auth_info.method='email';
+            emailphone =1;
+            [err, user] = await to(User.findOne({email:unique_key }));
+            if(err) TE(err.message);
+        }
 
-    }else if(validator.isMobilePhone(unique_key, 'any')){//checks if only phone number was sent
-        auth_info.method='phone';
-        emailphone =1;
-        [err, user] = await to(User.findOne({phone:unique_key }));
-        if(err) TE(err.message);
+    }else if(userInfo.phone!=''  && userInfo.phone != undefined){//checks if only phone number was sent
+        console.log("phone");
+        if(validator.isMobilePhone(userInfo.phone, 'any')){
+            auth_info.method='phone';
+            emailphone =1;
+            
+            [err, user] = await to(User.findOne({phone:userInfo.phone }));
+            
+            if(err) TE(err.message);
+        }
+        
 
     }else if(userInfo.fbid){
+        console.log("fbid");
         [err, user] = await to(User.findOne({fbid:userInfo.fbid }));
         if(err) TE(err.message);
     }else if(userInfo.twitterid){
@@ -137,6 +158,7 @@ const authUser = async function(userInfo){//returns token
 
         
     }
+	
     if(err) TE(err.message);
      
 

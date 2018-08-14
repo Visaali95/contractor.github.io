@@ -34,7 +34,11 @@ let UserSchema = mongoose.Schema({
     pintrestid: {type:String,trim: true, index: true},
     instaid: {type:String,trim: true, index: true},
     userType: {type:String,trim:true,enum: ['Builder', 'Contractor','Sub-contractor','independent']},
-    status:{type:Boolean}
+    status:{type:Boolean},
+    otp:{
+        type:String,
+        trim:true,
+      }
 
 }, {timestamps: true});
 
@@ -95,52 +99,9 @@ UserSchema.virtual('full_name').get(function () { //now you can treat as if this
     return this.first + ' ' + this.last;
 });
 
-UserSchema.statics.findByToken = function(token) {
-
-  // var secret = "12345"
-
-  var User = this;
-  var decoded;
-  try {
-    decoded = jwt.verify(token, CONFIG.secret);
-  } catch (e) {
-    return Promise.reject();
-  }
-  return User.findOne({
-    _id: decoded._id
-  })
-    .then(user => {
-      
-      if (!user) {
-        return Promise.reject();
-      } else {
-        return Promise.resolve(user);
-      }
-    })
-    .catch(e => {
-      res.status(401).end(e.message);
-    });
-};
-
-
-// for generating jwt auth token
-
-UserSchema.methods.generateAuthToken = function() {
-  console.log(1)
-  var user = this;
-  // var secret = "12345"
-  var token = jwt
-    .sign(
-      {
-        _id: user._id.toHexString()
-      },
-      CONFIG.secret
-    )
-    .toString();
-  user.token = token;
-  return user.save().then(() => {
-    return token;
-  });
+UserSchema.methods.getJWT = function(){
+    let expiration_time = parseInt(CONFIG.jwt_expiration);
+    return "Bearer "+jwt.sign({user_id:this._id}, CONFIG.jwt_encryption, {expiresIn: expiration_time});
 };
 
 UserSchema.methods.toWeb = function(){
@@ -150,3 +111,5 @@ UserSchema.methods.toWeb = function(){
 };
 
 let User = module.exports = mongoose.model('User', UserSchema);
+
+

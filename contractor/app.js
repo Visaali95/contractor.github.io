@@ -6,7 +6,8 @@ const pe            = require('parse-error');
 const cors          = require('cors');
 const path          = require('path');
 const v1 = require('./routes/v1');
-const job = require('./routes/job');
+
+// const job = require('./routes/job');
 
 
 const app = express();
@@ -40,15 +41,16 @@ app.set('view engine', 'html');
 
 
 app.use('/api', v1);
-app.use('/api', job);
+// app.use('/api', job);
 
 
 app.use('/', function(req, res){
+  
 	res.statusCode = 200;//send the appropriate status code
 	res.json({status:"success", message:"Parcel Pending API", data:{}})
 });
 
-// catch 404 and forward to error handler
+//catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
@@ -66,6 +68,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.json({'error' : "err"});
 });
+
+
 
 module.exports = app;
 

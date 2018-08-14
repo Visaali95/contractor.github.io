@@ -1,6 +1,11 @@
 const mongoose 	= require('mongoose');
-const User = require('./user.model');
+const validate  = require('mongoose-validator');
+
 const lineHeightSchema = new mongoose.Schema({
+   Room_id:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'addRoomsSchema'
+  },
    jobTitle:{
      type:String,
      required:true,
@@ -10,7 +15,7 @@ const lineHeightSchema = new mongoose.Schema({
      required:true,
    },
    jobArea:{
-     type:Number,
+     type:String,
      required:true,
    },
    desc:{
@@ -27,10 +32,13 @@ const lineHeightSchema = new mongoose.Schema({
   total:{
     type:Number,
     required:true,
+  },
+  duration:{
+    type:Number,
+    required:true,
   }
 },{_id:false,
-  versionKey:false,
-timestamps:true})
+  versionKey:false})
 const addRoomsSchema = new mongoose.Schema({
 
     Room:{
@@ -38,18 +46,16 @@ const addRoomsSchema = new mongoose.Schema({
       enum:[1,2,3,4],
     },
     details:{
-      type:Number,
+      type:String,
       required:true,
     },
-    lineHeight:[lineHeightSchema],
 
+},{ versionKey:false})
 
-},{ _id:false,
-  versionKey:false})
 const JobSchema = new mongoose.Schema({
         user_id:{
           type: mongoose.Schema.Types.ObjectId,
-          ref:'User'
+           ref: 'User'
         },
         jobTitle:{
           type:String,
@@ -58,7 +64,7 @@ const JobSchema = new mongoose.Schema({
         },
         isQuote:{
           type:Number,
-          required:true,
+          enum:[0,1],
         },
         jobLocation:{
           type:String,
@@ -83,29 +89,33 @@ const JobSchema = new mongoose.Schema({
         isInterior: {
           type:Number,
           required:true,
+          enum:[1,2],
         },//interior - 1 or exterrior - 2
         isNewConstruction:{
           type:Number,
           required:true,
+          enum:[1,2],
+          isOccupied:{
+            type:Number,
+            required:true,
+            enum:[1,2],
+          },//occupied - 1 or vacant - 2
         },//new construction - 1 or renovation - 2
-        isOccupied:{
+        matsupplied:String,
+        matsupDetails:String,//if partial take input fileds(all - 1 partial - 2 ,none - 3)
+        toolsupplied:String,
+        toolsupDetails:String,//if partial take input fileds(all - 1 partial - 2 ,none - 3),//if partial take input fileds(all - 1,partial - 2 ,none - 3)
+        isPostAs:{
           type:Number,
-          required:true,
-        },//occupied - 1 or vacant - 2
-        isMaterialSupplied: {
-                              type: 'Number',
-                              enum: [1,2,3],
-                            },//if partial take input fileds(all - 1 partial - 2 ,none - 3)
-        isToolsSupplied:{
-                              type: 'Number',
-                              enum: [1,2,3],
-                            },//if partial take input fileds(all - 1 partial - 2 ,none - 3),//if partial take input fileds(all - 1,partial - 2 ,none - 3)
-        isPostAs:Number, //full - 1 or line height - 2
-        addRoom:[addRoomsSchema],
+          enum:[1,2],
+         }, //full - 1 or line height - 2
+        addRoom:{
+          type:[addRoomsSchema],
+          required: true,
+        },
+
+        lineHeight:[lineHeightSchema],
      },{versionKey:false});
 
-
-const lineHeight = mongoose.model("lineHeight",lineHeightSchema);
-const addRooms = mongoose.model("addRooms",addRoomsSchema);
 const Jobs = mongoose.model("Jobs", JobSchema);
 module.exports = Jobs;

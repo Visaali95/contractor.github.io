@@ -1,9 +1,14 @@
-const mongoose 			= require('mongoose');
+const mongoose 			= require('mongoose'),
+Schema = mongoose.Schema;
 const {TE, to}          = require('../services/util.service');
 
 let CompanySchema = mongoose.Schema({
     name: {type:String},
-    users:  [ {user:{type : mongoose.Schema.ObjectId, ref : 'User'}, permissions:[{type:String}]} ],
+    user:  {type : mongoose.Schema.ObjectId, ref : 'User'},
+    location: {type:String},
+    postcode: {type:String},
+    domain: {type:String},
+    pictures: {type:String}
 }, {timestamps: true});
 
 CompanySchema.methods.toWeb = function(){
