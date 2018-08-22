@@ -8,6 +8,7 @@ let CompanySchema = mongoose.Schema({
     location: {type:String},
     postcode: {type:String},
     domain: {type:String},
+	logo:{type:String},
     pictures: {type:String}
 }, {timestamps: true});
 

@@ -1,19 +1,18 @@
-const express 		= require('express');
-const logger 	    = require('morgan');
-const bodyParser 	= require('body-parser');
-const passport      = require('passport');
-const pe            = require('parse-error');
-const cors          = require('cors');
-const path          = require('path');
-const v1 = require('./routes/v1');
+const express = require("express");
+const logger = require("morgan");
+const bodyParser = require("body-parser");
+const passport = require("passport");
+const pe = require("parse-error");
+const cors = require("cors");
+const path = require("path");
+const v1 = require("./routes/v1");
 
 // const job = require('./routes/job');
 
-
 const app = express();
 
-const CONFIG = require('./config/config');
-app.use(logger('dev'));
+const CONFIG = require("./config/config");
+app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(cookieParser());
@@ -22,57 +21,52 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Passport
 app.use(passport.initialize());
 //Log Env
-console.log("Environment:", CONFIG.app)
+console.log("Environment:", CONFIG.app);
 //DATABASE
 const models = require("./models");
 
 // CORS
 app.use(cors());
 // Require static assets from public folder
-app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.static(path.join(__dirname, "public/images/uploads")));
 // Set 'views' directory for any views
 // being rendered res.render()
-app.set('views', path.join(__dirname, 'views'));
+app.set("views", path.join(__dirname, "views"));
 
 // Set view engine as EJS
-app.engine('html', require('jade').renderFile);
-app.set('view engine', 'html');
+app.engine("html", require("jade").renderFile);
+app.set("view engine", "html");
 
-
-app.use('/api', v1);
+app.use("/api", v1);
 // app.use('/api', job);
 
-
-app.use('/', function(req, res){
-  
-	res.statusCode = 200;//send the appropriate status code
-	res.json({status:"success", message:"Parcel Pending API", data:{}})
+app.use("/", function(req, res) {
+  res.statusCode = 200; //send the appropriate status code
+  res.json({ status: "success", message: "Parcel Pending API", data: {} });
 });
 
 //catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error("Not Found");
   err.status = 404;
   next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-	console.log(err)
+  console.log(err);
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.json({'error' : "err"});
+  res.json({ error: "err" });
 });
-
-
 
 module.exports = app;
 
-process.on('unhandledRejection', error => {
-    console.error('Uncaught Error', pe(error));
+process.on("unhandledRejection", error => {
+  console.error("Uncaught Error", pe(error));
 });

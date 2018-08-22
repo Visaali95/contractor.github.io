@@ -4,7 +4,7 @@ require('dotenv').config();//instatiate environment variables
 let CONFIG = {} //Make this global to use all over the application
 
 CONFIG.app          = process.env.APP   || 'development';
-CONFIG.port         = process.env.PORT  || '3000';
+CONFIG.port         = process.env.PORT  || '8081';
 
 CONFIG.db_dialect   = process.env.DB_DIALECT    || 'mongo';
 CONFIG.db_host      = process.env.DB_HOST       || 'localhost';
