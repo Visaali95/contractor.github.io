@@ -14,3 +14,19 @@ const makeOfferCreate = (req, res) => {
     });
 };
 module.exports.makeOfferCreate = makeOfferCreate;
+
+const makeOfferGet = (req, res) => {
+  makeOffer
+    .find({
+      $or: [{ jobId: req.params.jobId }, { lineItemId: req.params.jobId }]
+    })
+    .sort({ createdAt: -1 })
+    .populate("fromUserId toUserId")
+    .then(offers => {
+      return ReS(res, { message: "Updated Successfully", offers: offers });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.makeOfferGet = makeOfferGet;

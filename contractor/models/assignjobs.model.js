@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
-const makeofferSchema = new mongoose.Schema(
+const assignJobsSchema = new mongoose.Schema(
   {
     fromUserId: { type: mongoose.Schema.ObjectId, ref: "User" },
     toUserId: { type: mongoose.Schema.ObjectId, ref: "User" },
     jobId: { type: mongoose.Schema.ObjectId, ref: "Jobs" },
-    lineItemId: String,
-    price: String
+    lineItemId: String
   },
   { timestamps: true }
 );
 
-const makeOffer = mongoose.model("makeOffer", makeofferSchema);
-module.exports = makeOffer;
+const assignJobs = mongoose.model("assignJobs", assignJobsSchema);
+module.exports = assignJobs;

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const reviewController = require("../controllers/review.controller");
+const assignJobsController = require("../controllers/assignjobs.controller");
+const commentsController = require("../controllers/comments.controller");
 const bidController = require("../controllers/bid.controller");
 const makeOfferController = require("../controllers/makeoffer.controller");
 const jobTradeController = require("../controllers/jobtrade.controller");
@@ -18,6 +21,7 @@ const path = require("path");
 
 require("./../middleware/passport")(passport);
 /* GET home page. */
+
 router.get("/", function(req, res, next) {
   res.json({
     status: "success",
@@ -121,9 +125,14 @@ router.put(
 );
 
 router.get(
-  "/search",
+  "/search/:user_id",
   passport.authenticate("jwt", { session: false }),
   jobController.searchJobTitle
+);
+router.get(
+  "/searchfilter/:user_id",
+  passport.authenticate("jwt", { session: false }),
+  jobController.searchFilter
 );
 
 router.post("/jobtrade", jobTradeController.create);
@@ -135,10 +144,45 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   makeOfferController.makeOfferCreate
 );
+
+router.get(
+  "/makeoffer/:jobId",
+  passport.authenticate("jwt", { session: false }),
+  makeOfferController.makeOfferGet
+);
+
 router.post(
   "/bid",
   passport.authenticate("jwt", { session: false }),
   bidController.bidCreate
+);
+
+router.post(
+  "/comments",
+  passport.authenticate("jwt", { session: false }),
+  commentsController.commentCreate
+);
+router.get(
+  "/comments/:jobId",
+  passport.authenticate("jwt", { session: false }),
+  commentsController.commentGet
+);
+
+router.post(
+  "/assignjobs",
+  passport.authenticate("jwt", { session: false }),
+  assignJobsController.assignJobsCreate
+);
+
+router.post(
+  "/review",
+  passport.authenticate("jwt", { session: false }),
+  reviewController.reviewCreate
+);
+router.get(
+  "/review/:toUserId",
+  passport.authenticate("jwt", { session: false }),
+  reviewController.reviewGet
 );
 //********* API DOCUMENTATION **********
 router.use(

@@ -26,7 +26,7 @@ const lineHeightSchema = new mongoose.Schema(
     },
     isFixed: {
       type: Number,
-      enum: [0, 1]
+      enum: [0, 1] // 0 - hourly 1- fixed
     },
     fixedCost: {
       type: Number
@@ -125,7 +125,7 @@ const JobSchema = new mongoose.Schema(
 
     lineHeight: [lineHeightSchema]
   },
-  { versionKey: false }
+  { timestamps: true, versionKey: false }
 );
 
 const Jobs = mongoose.model("Jobs", JobSchema);

@@ -67,6 +67,7 @@ const draftjob = (req, res) => {
     user_id: req.params.user_id,
     $or: [{ addRoom: { $size: 0 } }, { lineHeight: { $size: 0 } }]
   })
+    .sort({ createdAt: -1 })
     .then(draft => {
       if (draft.length == 0) {
         throw "Draft not found";
@@ -90,6 +91,7 @@ let pickResponse = data => {
 
 const jobDetails = (req, res) => {
   Jobs.find({ _id: req.params.job_id })
+    .sort({ createdAt: -1 })
     .then(details => {
       if (!details) {
         throw "Job not found";
@@ -106,6 +108,7 @@ module.exports.jobDetails = jobDetails;
 const DashboardDetails = (req, res) => {
   var dashboard;
   return Jobs.find({ user_id: req.params.user_id })
+    .sort({ createdAt: -1 })
     .then(result => {
       dashboard = {
         contracts: [],
@@ -118,16 +121,21 @@ const DashboardDetails = (req, res) => {
           dashboard.inactive.push(exp);
         }
       });
-      return Jobs.find({ user_id: { $ne: req.params.user_id } }).then(jobs => {
-        dashboard.jobs = jobs;
-        return company.find({ user: req.params.user_id }).then(company => {
-          dashboard.company = company;
-          return ReS(res, {
-            message: "Dashboard details",
-            dashboard: dashboard
-          });
+      return Jobs.find({ user_id: { $ne: req.params.user_id } })
+        .sort({ createdAt: -1 })
+        .then(jobs => {
+          dashboard.jobs = jobs;
+          return company
+            .find({ user: req.params.user_id })
+            .sort({ createdAt: -1 })
+            .then(company => {
+              dashboard.company = company;
+              return ReS(res, {
+                message: "Dashboard details",
+                dashboard: dashboard
+              });
+            });
         });
-      });
     })
     .catch(e => {
       return ReE(res, e, 422);
@@ -169,21 +177,45 @@ const editTask = (req, res) => {
 module.exports.editTask = editTask;
 
 const searchJobTitle = (req, res) => {
-  let results = [];
-  Jobs.find({ jobTitle: { $regex: req.query.q, $options: "i" } })
-    .sort({ created_at: -1 })
+  Jobs.find({
+    jobTitle: { $regex: req.query.q, $options: "i" },
+    user_id: { $ne: req.params.user_id }
+  })
+    .sort({ createdAt: -1 })
     .limit(20)
     .then(result => {
       if (result.length == 0) {
         throw "Jobs not found";
       }
-      result.map(resultObj => {
-        results.push(pickResponse(resultObj));
-      });
-      return ReS(res, { message: "Updated Successfully", result: results });
+      return ReS(res, { message: "Updated Successfully", result: result });
     })
     .catch(e => {
       return ReE(res, e, 422);
     });
 };
 module.exports.searchJobTitle = searchJobTitle;
+
+const searchFilter = (req, res) => {
+  // debugger;
+  query = {
+    user_id: { $ne: req.params.user_id },
+    "lineHeight.jobTrade": req.query.jobTrade,
+    isInterior: req.query.isInterior,
+    "addRoom.details": req.query.details,
+    jobLocation: req.query.jobLocation
+  };
+  Jobs.find(query)
+    .sort({ createdAt: -1 })
+    .limit(20)
+    .then(result => {
+      debugger;
+      if (result.length == 0) {
+        throw "Jobs not found";
+      }
+      return ReS(res, { message: "Updated Successfully", result: result });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.searchFilter = searchFilter;

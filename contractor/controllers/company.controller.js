@@ -47,7 +47,7 @@ const create = async function(req, res) {
       var logos = req.files.image;
       if (Array.isArray(logos)) {
         for (var val of logos) {
-          logo.push("http://18.222.231.171/" + val.filename);
+          logo.push("http://18.222.231.171:8081/" + val.filename);
         }
         company_info.logo = logo;
       } else {
@@ -57,7 +57,7 @@ const create = async function(req, res) {
       var photos = req.files.photos;
       if (Array.isArray(photos)) {
         for (var val of photos) {
-          pictures.push("http://18.222.231.171/" + val.filename);
+          pictures.push("http://18.222.231.171:8081/" + val.filename);
         }
         company_info.pictures = pictures;
       } else {
