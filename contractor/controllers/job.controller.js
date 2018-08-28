@@ -62,7 +62,7 @@ const updaterooms = (req, res) => {
 module.exports.updaterooms = updaterooms;
 
 const draftjob = (req, res) => {
-  let drafts = [];
+  // let drafts = [];
   Jobs.find({
     user_id: req.params.user_id,
     $or: [{ addRoom: { $size: 0 } }, { lineHeight: { $size: 0 } }]
@@ -72,11 +72,11 @@ const draftjob = (req, res) => {
       if (draft.length == 0) {
         throw "Draft not found";
       }
-      draft.map(draftObj => {
-        drafts.push(pickResponse(draftObj));
-      });
+      // draft.map(draftObj => {
+      //   drafts.push(pickResponse(draftObj));
+      // });
 
-      return ReS(res, { message: "Draft details", draft: drafts });
+      return ReS(res, { message: "Draft details", draft: draft });
     })
     .catch(e => {
       return ReE(res, e, 422);

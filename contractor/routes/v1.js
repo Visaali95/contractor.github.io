@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const ConversationController = require("../controllers/conversation.controller");
 const reviewController = require("../controllers/review.controller");
 const assignJobsController = require("../controllers/assignjobs.controller");
 const commentsController = require("../controllers/comments.controller");
@@ -184,6 +185,18 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   reviewController.reviewGet
 );
+
+router.post(
+  "/conversations",
+  passport.authenticate("jwt", { session: false }),
+  ConversationController.ConversationCreate
+);
+router.get(
+  "/conversations/:fromUserId",
+  passport.authenticate("jwt", { session: false }),
+  ConversationController.ConversationGet
+);
+
 //********* API DOCUMENTATION **********
 router.use(
   "/docs/api.json",

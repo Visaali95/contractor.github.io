@@ -59,7 +59,8 @@ let UserSchema = mongoose.Schema(
     otp: {
       type: String,
       trim: true
-    }
+    },
+    deviceToken: [String]
   },
   { timestamps: true }
 );
