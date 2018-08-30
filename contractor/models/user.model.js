@@ -60,9 +60,12 @@ let UserSchema = mongoose.Schema(
       type: String,
       trim: true
     },
-    deviceToken: [String]
+    deviceToken: String
   },
-  { timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true
+  }
 );
 
 UserSchema.virtual("companies", {

@@ -11,7 +11,10 @@ let CompanySchema = mongoose.Schema(
     domain: { type: String },
     ratings: { type: Number, enum: [1, 2, 3, 4, 5] },
     logo: { type: String },
-    pictures: { type: String }
+    pictures: { type: String },
+    companyAbout: { type: String },
+    companySocial: { type: String },
+    companyLicence: { type: String }
   },
   { timestamps: true }
 );

@@ -12,7 +12,16 @@ var message = {
     body: "Body of your push notification"
   }
 };
-
+// {
+//   "message":{
+//     "token":"bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1...",
+//     "data":{
+//       "Nick" : "Mario",
+//       "body" : "great match!",
+//       "Room" : "PortugalVSDenmark"
+//     }
+//   }
+// }
 fcm
   .send(message)
   .then(function(response) {

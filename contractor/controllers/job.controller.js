@@ -4,7 +4,7 @@ const company = require("../models/company.model");
 const { ReE, ReS } = require("../services/util.service");
 const _ = require("lodash");
 const moment = require("moment");
-
+// job create or post job
 const create = (req, res) => {
   var JobSave = new Jobs(req.body);
   JobSave.save()
@@ -16,7 +16,7 @@ const create = (req, res) => {
     });
 };
 module.exports.create = create;
-
+// lineItem create or line Item update
 const updatelineheights = (req, res) => {
   Jobs.findOneAndUpdate(
     { _id: req.params._id },
@@ -38,7 +38,7 @@ const updatelineheights = (req, res) => {
     });
 };
 module.exports.updatelineheights = updatelineheights;
-
+// room create or room update
 const updaterooms = (req, res) => {
   Jobs.findOneAndUpdate(
     { _id: req.params._id },
@@ -60,7 +60,7 @@ const updaterooms = (req, res) => {
     });
 };
 module.exports.updaterooms = updaterooms;
-
+// job draft
 const draftjob = (req, res) => {
   // let drafts = [];
   Jobs.find({
@@ -88,7 +88,7 @@ let pickResponse = data => {
   data = _.pick(data, ["_id", "jobTitle", "jobLocation", "propertyType"]);
   return data;
 };
-
+// get job details
 const jobDetails = (req, res) => {
   Jobs.find({ _id: req.params.job_id })
     .sort({ createdAt: -1 })
@@ -104,7 +104,26 @@ const jobDetails = (req, res) => {
     });
 };
 module.exports.jobDetails = jobDetails;
-
+// edit job or update job
+const editTask = (req, res) => {
+  Jobs.findByIdAndUpdate(
+    { _id: req.params._id },
+    {
+      $set: req.body
+    },
+    {
+      new: true
+    }
+  )
+    .then(task => {
+      return ReS(res, { message: "Updated Successfully", task: task });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.editTask = editTask;
+//  dashboard
 const DashboardDetails = (req, res) => {
   var dashboard;
   return Jobs.find({ user_id: req.params.user_id })
@@ -157,25 +176,7 @@ let pickResult = result => {
   return result;
 };
 
-const editTask = (req, res) => {
-  Jobs.findByIdAndUpdate(
-    { _id: req.params._id },
-    {
-      $set: req.body
-    },
-    {
-      new: true
-    }
-  )
-    .then(task => {
-      return ReS(res, { message: "Updated Successfully", task: task });
-    })
-    .catch(e => {
-      return ReE(res, e, 422);
-    });
-};
-module.exports.editTask = editTask;
-
+// search job by jobTitle
 const searchJobTitle = (req, res) => {
   Jobs.find({
     jobTitle: { $regex: req.query.q, $options: "i" },
@@ -194,7 +195,7 @@ const searchJobTitle = (req, res) => {
     });
 };
 module.exports.searchJobTitle = searchJobTitle;
-
+// search job by filter
 const searchFilter = (req, res) => {
   // debugger;
   query = {
@@ -202,13 +203,25 @@ const searchFilter = (req, res) => {
     "lineHeight.jobTrade": req.query.jobTrade,
     isInterior: req.query.isInterior,
     "addRoom.details": req.query.details,
-    jobLocation: req.query.jobLocation
+    jobLocation: req.query.jobLocation,
+    latitude: req.query.latitude,
+    logitude: req.query.longitude
+    // $geometry: {
+    //   $near: {
+    //     $geometry: {
+    //       type: "Point",
+    //       coordinates: [req.query.latitude, req.query.longitude]
+    //     },
+    //     $maxDistance: 50,
+    //     $minDistance: 0
+    //   }
+    // }
   };
+
   Jobs.find(query)
     .sort({ createdAt: -1 })
     .limit(20)
     .then(result => {
-      debugger;
       if (result.length == 0) {
         throw "Jobs not found";
       }

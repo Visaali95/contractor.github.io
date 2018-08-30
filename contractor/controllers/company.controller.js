@@ -1,4 +1,5 @@
 const { Company } = require("../models");
+const company = require("../models/company.model");
 const { to, ReE, ReS } = require("../services/util.service");
 var multer = require("multer");
 var storage = multer.diskStorage({
@@ -119,3 +120,38 @@ const remove = async function(req, res) {
   return ReS(res, { message: "Deleted Company" }, 204);
 };
 module.exports.remove = remove;
+
+// profile api
+
+const profile = (req, res) => {
+  var profileDetails;
+  company
+    .findOneAndUpdate({ _id: req.params._id })
+    .then(galleryCompany => {
+      profileDetails.galleryCompany = galleryCompany;
+      return review
+        .findOneAndUpdate({ toUserId: req.body.toUserId }) //send the logged in user id
+        .then(galleryReview => {
+          profileDetails.galleryReview = galleryReview;
+          return Company.findOneAndUpdate(
+            { _id: req.params._id },
+            {
+              $set: {
+                companyAbout: req.body.companyAbout,
+                companySocial: req.body.companySocial,
+                comapnyLicense: req.body.companyLicense
+              }
+            },
+            { upsert: true, new: true }
+          ).then(about => {
+            profileDetails.about = about;
+            return ReS(res, {
+              message: "Updated Successfully",
+              profileDetails: profileDetails
+            });
+          });
+        });
+    })
+    .catch(e => {});
+};
+module.exports.profile = profile;

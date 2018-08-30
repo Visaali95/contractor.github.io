@@ -51,7 +51,7 @@ const reviewCreate = (req, res) => {
     }
     review
       .create(review_info)
-      .then(offer => {
+      .then(review => {
         return ReS(res, { message: "Updated Successfully", review: review });
       })
       .catch(e => {

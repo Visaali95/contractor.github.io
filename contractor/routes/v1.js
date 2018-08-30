@@ -192,9 +192,27 @@ router.post(
   ConversationController.ConversationCreate
 );
 router.get(
-  "/conversations/:fromUserId",
+  "/conversations/:toUserId",
   passport.authenticate("jwt", { session: false }),
   ConversationController.ConversationGet
+);
+
+router.get(
+  "/conversations/messages/:conversationId",
+  passport.authenticate("jwt", { session: false }),
+  ConversationController.MessagesGet
+);
+
+router.get(
+  "/notifications/:toUserId",
+  passport.authenticate("jwt", { session: false }),
+  makeOfferController.notificationGet
+);
+
+router.post(
+  "/profile/:_id",
+  passport.authenticate("jwt", { session: false }),
+  CompanyController.profile
 );
 
 //********* API DOCUMENTATION **********
