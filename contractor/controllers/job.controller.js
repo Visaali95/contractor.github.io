@@ -197,15 +197,14 @@ const searchJobTitle = (req, res) => {
 module.exports.searchJobTitle = searchJobTitle;
 // search job by filter
 const searchFilter = (req, res) => {
-  // debugger;
   query = {
     user_id: { $ne: req.params.user_id },
     "lineHeight.jobTrade": req.query.jobTrade,
     isInterior: req.query.isInterior,
     "addRoom.details": req.query.details,
-    jobLocation: req.query.jobLocation,
-    latitude: req.query.latitude,
-    logitude: req.query.longitude
+    jobLocation: req.query.jobLocation
+    // latitude: req.query.latitude,
+    // logitude: req.query.longitude
     // $geometry: {
     //   $near: {
     //     $geometry: {

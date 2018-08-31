@@ -43,6 +43,18 @@ const ConversationCreate = (req, res) => {
             senderImg: "",
             receiverImg: ""
           });
+          androidNotification.androidPush(receiver.deviceToken, {
+            conversationId: chats._id,
+            message: `${sender.first} has sent you a message`,
+            msg: req.body.message,
+            time: chats.updatedAt,
+            receiverId: receiver._id,
+            senderId: sender._id,
+            senderName: sender.first,
+            receiverName: receiver.first,
+            senderImg: "",
+            receiverImg: ""
+          });
           return ReS(res, {
             message: "Updated Successfully",
             chats: chats

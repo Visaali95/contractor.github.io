@@ -14,7 +14,7 @@ let CompanySchema = mongoose.Schema(
     pictures: { type: String },
     companyAbout: { type: String },
     companySocial: { type: String },
-    companyLicence: { type: String }
+    companyLicense: { type: String }
   },
   { timestamps: true }
 );

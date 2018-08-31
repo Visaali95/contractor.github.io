@@ -3,6 +3,7 @@ const Jobs = require("../models/job.model");
 const notification = require("../models/notification.model");
 const { ReE, ReS } = require("../services/util.service");
 const pushNotification = require("../controllers/pushIosNotification.controller");
+const androidNotification = require("../controllers/pushAndroidNotification.controller");
 const _ = require("lodash");
 const User = require("../models/user.model");
 const makeOfferCreate = (req, res) => {
@@ -11,17 +12,22 @@ const makeOfferCreate = (req, res) => {
     .save()
     .then(offer => {
       return User.findOne({ _id: req.body.toUserId }).then(receiver => {
-        let msg = `${user.first} is interested in working with you`;
-        pushNotification.iosPush(user.deviceToken, {
-          message: msg
+        return User.findOne({ _id: req.body.fromUserId }).then(sender => {
+          let msg = `${sender.first} is interested in working with you`;
+          pushNotification.iosPush(receiver.deviceToken, {
+            message: msg
+          });
+          androidNotification.androidPush(receiver.deviceToken, {
+            message: msg
+          });
+          var notificationSave = new notification({
+            messages: msg,
+            toUserId: receiver._id,
+            jobUserId: offer.jobId
+          });
+          notificationSave.save();
+          return ReS(res, { message: "Updated Successfully", offer: offer });
         });
-        var notificationSave = new notification({
-          messages: msg,
-          toUserId: receiver._id,
-          jobUserId: offer.jobId
-        });
-        notificationSave.save();
-        return ReS(res, { message: "Updated Successfully", offer: offer });
       });
     })
     .catch(e => {

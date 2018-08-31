@@ -7,17 +7,19 @@ const bidCreate = (req, res) => {
   bidSave
     .save()
     .then(offer => {
-      return User.findOne({ _id: req.body.toUserId }).then(user => {
-        let msg = `${user.first} is interested in working with you`;
-        pushNotification.iosPush(user.deviceToken, {
-          message: msg
+      return User.findOne({ _id: req.body.toUserId }).then(receiver => {
+        return User.findOne({ _id: req.body.fromUserId }).then(sender => {
+          let msg = `${sender.first} is interested in working with you`;
+          pushNotification.iosPush(receiver.deviceToken, {
+            message: msg
+          });
+          var notificationSave = new notification({
+            messages: msg,
+            toUserId: user._id
+          });
+          notificationSave.save();
+          return ReS(res, { message: "Updated Successfully", offer: offer });
         });
-        var notificationSave = new notification({
-          messages: msg,
-          toUserId: user._id
-        });
-        notificationSave.save();
-        return ReS(res, { message: "Updated Successfully", offer: offer });
       });
     })
     .catch(e => {

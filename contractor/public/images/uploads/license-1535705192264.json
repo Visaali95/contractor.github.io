@@ -1,0 +1,1003 @@
+{
+	"info": {
+		"_postman_id": "4fa65e70-4e97-43b7-8deb-c4814e507dee",
+		"name": "ContractConnect",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "post job ",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM0OTQwMzI2LCJleHAiOjE1MzQ5NTAzMjZ9.aiikF7rrCyCw43GAgMoSwJVP__kpXau40Mt0L8X3euM"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"user_id\":\"5b7d3b13d8567530da65f4f1\",\n\t    \"jobTitle\":\"electrician\",\n        \"isQuote\":1,\n        \"jobLocation\":\"noida\",\n        \"propertyType\":\"flat\",\n        \"jobStart\":\"2018-05-09\",\n        \"postExpiry\":\"2018-11-11\",\n        \"isInterior\":2 ,\n        \"isNewConstruction\":2,\n        \"isOccupied\":1,\n        \"matsupplied\":\"partial\",\n        \"matsupDetails\":\"sasf\",\n       \t\"toolsupplied\":\"partial\",\n        \"toolsupDetails\":\"sadfs\",\n        \"isPostAs\":1\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/jobcreate/5b7d3b13d8567530da65f4f1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"jobcreate",
+						"5b7d3b13d8567530da65f4f1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n \t \"first\": \"bid\",\n    \"last\":    \"quote\",\n    \"phone\":\"9876698209\",\n     \"email\":\"bid.quote@parangat.com\",\n    \"password\": \"bidquote\",\n    \"postcode\":  \"201301\",\n\t \"fbid\":\"bidquote01\",\n    \"twitterid\": \"bidquote01\",\n    \"pintrestid\": \"bidquote01\",\n    \"instaid\": \"bidquote01\",\n    \"userType\": \"Contractor\",\n    \"status\":\"true\"\n }"
+				},
+				"url": {
+					"raw": "{{url}}/api/users",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "post user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "first",
+									"value": "ambika",
+									"sessionValue": "abscd",
+									"type": "text"
+								},
+								{
+									"key": "last",
+									"value": "dsgfdg",
+									"sessionValue": "dsgfdg",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "9876543280",
+									"sessionValue": "9876543210",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ambika@xyz.com",
+									"sessionValue": "abc@xyz.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "dsfsfdgsf",
+									"sessionValue": "dsfsfdgsf",
+									"type": "text"
+								},
+								{
+									"key": "postcode",
+									"value": "201304",
+									"sessionValue": "201304",
+									"type": "text"
+								},
+								{
+									"key": "fbid",
+									"value": "ambika@xyz.com",
+									"sessionValue": "abc@xyz.com",
+									"type": "text"
+								},
+								{
+									"key": "twitterid",
+									"value": "ambika@xyz.com",
+									"sessionValue": "abc@xyz.com",
+									"type": "text"
+								},
+								{
+									"key": "pintrestid",
+									"value": "ambika@xyz.com",
+									"sessionValue": "abc@xyz.com",
+									"type": "text"
+								},
+								{
+									"key": "instaid",
+									"value": "ambika@xyz.com",
+									"sessionValue": "abc@xyz.com",
+									"type": "text"
+								},
+								{
+									"key": "userType",
+									"value": "Builder",
+									"sessionValue": "abc@xyz.com",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "true",
+									"sessionValue": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*",
+							"name": "Access-Control-Allow-Origin",
+							"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive",
+							"name": "Connection",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"key": "Content-Length",
+							"value": "726",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 06 Aug 2018 09:49:38 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2d6-2Uoz205bS/3N9dvkWvu7IR3d8r0\"",
+							"name": "ETag",
+							"description": "An identifier for a specific version of a resource, often a message digest"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express",
+							"name": "X-Powered-By",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookie": [],
+					"body": "{\"message\":\"Successfully created new user.\",\"user\":{\"_id\":\"5b6819b209650913150fcdce\",\"first\":\"kanak\",\"last\":\"dsgfdg\",\"phone\":\"9876543280\",\"email\":\"kanak@xyz.com\",\"password\":\"$2a$10$Gue2OGuqhzdXxmPhEMaJhOiZZTndNCRQIryllO6TNNiT5PItgoUwm\",\"postcode\":\"201304\",\"fbid\":\"kanak@xyz.com\",\"twitterid\":\"kanak@xyz.com\",\"pintrestid\":\"kanak@xyz.com\",\"instaid\":\"kanak@xyz.com\",\"userType\":\"Builder\",\"status\":true,\"createdAt\":\"2018-08-06T09:49:38.210Z\",\"updatedAt\":\"2018-08-06T09:49:38.210Z\",\"__v\":0,\"id\":\"5b6819b209650913150fcdce\"},\"token\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI2ODE5YjIwOTY1MDkxMzE1MGZjZGNlIiwiaWF0IjoxNTMzNTQ4OTc4LCJleHAiOjE1MzM1NTg5Nzh9.qELYLRAzgftMwVVTjyG9EwRBa2WchaXhctH9XUNPWcI\",\"success\":true}"
+				}
+			]
+		},
+		{
+			"name": "user login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "authentication",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI2ZDgyNDgzOTgzYTExMWM5NWIxNDZiIiwiaWF0IjoxNTMzOTAzNDMyLCJleHAiOjE1MzM5MTM0MzJ9.9zqV--Ui1EtFKz-PSxL10C-2BsAZ6E7rdcJnJwLFLgw",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"emailid\":\"\",\n  \"fbid\":\"bidquote01\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/users/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "forgot password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"visaali.s@parangat.com\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/forgotpassword",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"forgotpassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validate otp",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"visaali.s@parangat.com\",\n\t\"otp\":\"1111\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/validateotp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"validateotp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "dashboard",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDIzMDIxLCJleHAiOjE1MzUwMzMwMjF9.NNoJGhHau6ekCEjeFgfO6vGa64Hb4ElixLLI8vS0aow"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/dashboard/5b7d3b13d8567530da65f4f1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"dashboard",
+						"5b7d3b13d8567530da65f4f1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add rooms",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDM0OTZkODU2NzUzMGRhNjVmNGRkIiwiaWF0IjoxNTM0OTMyMTIxLCJleHAiOjE1MzQ5NDIxMjF9.byyySDERSsWnmkgTP2-22Ekq2kbjevDZlMk0QruqK-Y"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"addRoom\":[\n\t{\n\t\t\"Room\":1,\n\t\t\"details\":\"kitchen\"\n\t},{\n\t\t\"Room\":2,\n\t\t\"details\":\"BedRoom\"\n\t}\n        ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/rooms/5b7d3d91a21b7635faf4c0f0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"rooms",
+						"5b7d3d91a21b7635faf4c0f0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lineheight",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDM0OTZkODU2NzUzMGRhNjVmNGRkIiwiaWF0IjoxNTM0OTMyMTIxLCJleHAiOjE1MzQ5NDIxMjF9.byyySDERSsWnmkgTP2-22Ekq2kbjevDZlMk0QruqK-Y"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lineHeight\": [\n        {\n        \t\"Room_id\":\"5b7d3da1a21b7635faf4c0f2\",\n            \"jobTitle\": \"carpenter\",\n            \"floorLevel\": \"Ground Floor\",\n            \"jobTrade\": \"HVAC\",\n            \"jobWork\":\"Partition Wall\",\n            \"desc\": \"door has to be changed\",\n            \"isFixed\": 1,\n            \"hourlyCost\": 200,\n            \"hourlyTotal\": 200,\n            \"hourlyDuration\":24323\n        },\n        {\n        \t\"Room_id\":\"5b7d3da1a21b7635faf4c0f2\",\n            \"jobTitle\": \"carpenter\",\n            \"floorLevel\": 1,\n            \"jobTrade\": \"HVAC\",\n            \"jobWork\":\"Partition Wall\",\n            \"desc\": \"door has to be changed\",\n            \"isFixed\": 0,\n            \"fixedCost\": 200\n            \n        },\n        {\n        \t\"Room_id\":\"5b7d3da1a21b7635faf4c0f2\",\n            \"jobTitle\": \"carpenter\",\n            \"floorLevel\": 1,\n            \"jobTrade\": \"HVAC\",\n            \"jobWork\":\"Partition Wall\",\n            \"desc\": \"door has to be changed\",\n            \"isFixed\": 0,\n            \"fixedCost\": 200\n            \n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/lineheight/5b7d3d91a21b7635faf4c0f0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"lineheight",
+						"5b7d3d91a21b7635faf4c0f0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "job draft",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI2OTY2YTg2MTBlMTQyOTIzNDBlOTc0IiwiaWF0IjoxNTM0NDk1NDM2LCJleHAiOjE1MzQ1MDU0MzZ9.zSDPiU4UUccf5kDTFYwOeqIe0ql0A4e95MSw6wO4IhA"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/draftjob/5b6966a8610e14292340e974",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"draftjob",
+						"5b6966a8610e14292340e974"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "job details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3YmFmMWZmNGRhZmI0NzhhMWVkOWY4IiwiaWF0IjoxNTM0ODUwNjgyLCJleHAiOjE1MzQ4NjA2ODJ9.KhYiqpVyK5rPIqJ6SpCpNo54A4CmqIOSuugyutRg5UU"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/jobdetails/5b7c0089b2ee1f7b313027e8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"jobdetails",
+						"5b7c0089b2ee1f7b313027e8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit task",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3MTYwYWNiYWEyZTk0MWUyMDE1NTA0IiwiaWF0IjoxNTM0NDE3NDUzLCJleHAiOjE1MzQ0Mjc0NTN9.NBYnshBJGZOlEaEM4sTSoFW7zsHE17n_Cn2d7sogC6g"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\n\t    \"jobTitle\":\"painter\",\n \n  \n     \n\n        \"isOccupied\":2\n     \n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/edittask/5b726288d0843e75f0ffd2e0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"edittask",
+						"5b726288d0843e75f0ffd2e0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiZDM0MzhkZDAzYzlhODg5ZDE4IiwiaWF0IjoxNTM1MTAyMTQ1LCJleHAiOjE1MzUxMTIxNDV9.Ohi7qf3galWSONcjQGo0yjAT80-OTFSRA4-9iRwYyaY"
+					},
+					{
+						"key": "term",
+						"value": "electrician",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/search/5b7d3bd3438dd03c9a889d18?q=electrician",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"search",
+						"5b7d3bd3438dd03c9a889d18"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "electrician"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create job trade",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\t\"jobTrade\": \"SAND AND FINSH\"\n}\n\t"
+				},
+				"url": {
+					"raw": "{{url}}/api/jobtrade",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"jobtrade"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "job trade work",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/jobtradeandwork",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"jobtradeandwork"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create job work",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jobWork\":\"VANITY LEGS\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/jobwork",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"jobwork"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Company insert ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDA0OTM2LCJleHAiOjE1MzUwMTQ5MzZ9.neEI4NAW3xE4SNUKMRjv0jFmcvVrtJ1aLyzz9rVGUWM"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "flipkart",
+							"sessionValue": "Parangat",
+							"type": "text"
+						},
+						{
+							"key": "location",
+							"value": "noida",
+							"sessionValue": "noida",
+							"type": "text"
+						},
+						{
+							"key": "domain",
+							"value": "it",
+							"sessionValue": "it",
+							"type": "text"
+						},
+						{
+							"key": "postcode",
+							"value": "201304",
+							"sessionValue": "201304",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"sessionValue": {
+								"0": {}
+							},
+							"type": "file"
+						},
+						{
+							"key": "user",
+							"value": "5b7a492f912a4b23a83a5ddd",
+							"sessionValue": "5b7a492f912a4b23a83a5ddd",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "photos",
+							"sessionValue": {
+								"0": {}
+							},
+							"type": "file"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/companies/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"companies",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get companies data ",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3YTQ5MmY5MTJhNGIyM2E4M2E1ZGRkIiwiaWF0IjoxNTM0OTE3NzkzLCJleHAiOjE1MzQ5Mjc3OTN9.4JZ-ExR4sm2jsMi2E5McSzfBSBafnvbPXhMh0QMAccg"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/companies/5b7cfce90b050220b7df644e",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"companies",
+						"5b7cfce90b050220b7df644e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "make offer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3YjhmMThmMGEyNDAyZGNlZTM1YjZlIiwiaWF0IjoxNTM1MDIzOTc0LCJleHAiOjE1MzUwMzM5NzR9.a9QUOKE3V7pGreBB2PuAOUzNIDu9iE0qoBisqvvLtns"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"fromUserId\":\"5b7b8f18f0a2402dcee35b6e\",\n\t\"toUserId\":\"5b7baf9df4dafb478a1ed9fa\",\n\t\"jobId\":\"5b7e913d672e9c77b99cbec4\",\n\t\"lineItemId\":\"5b7e9170672e9c77b99cbec6\",\n\t\"price\":2222\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/makeoffer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"makeoffer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bid quote",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3YjhmMThmMGEyNDAyZGNlZTM1YjZlIiwiaWF0IjoxNTM1MDIzOTc0LCJleHAiOjE1MzUwMzM5NzR9.a9QUOKE3V7pGreBB2PuAOUzNIDu9iE0qoBisqvvLtns"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"fromUserId\":\"5b7b8f18f0a2402dcee35b6e\",\n\t\"toUserId\":\"5b7baf9df4dafb478a1ed9fa\",\n\t\"jobId\":\"5b7e913d672e9c77b99cbec4\",\n\t\"lineItemId\":\"5b7e9170672e9c77b99cbec6\",\n\t\"price\":9000\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/bid",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"bid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create comments",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM0OTk5NzY4LCJleHAiOjE1MzUwMDk3Njh9.JUye5aITfF5oSeRt3oNeeJQ0gALLSVuI9d4XfiF43nA"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\":\"5b7d3b13d8567530da65f4f1\",\n\t\"comment\":\"this is a good job\",\n\t\"jobId\":\"5b7d3b79d8567530da65f4f2\"\n\t\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/comments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get comments",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDAxMDk2LCJleHAiOjE1MzUwMTEwOTZ9.yM8A0XKZ63rWCezseRDDJa7JEKdNcIdFd9irXmf_LwQ"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/comments/5b7d3b79d8567530da65f4f2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"comments",
+						"5b7d3b79d8567530da65f4f2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get make offer",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDEzMDkxLCJleHAiOjE1MzUwMjMwOTF9.6-XYSgvpNEw81DkGr1_cwlhgPxjkA_QB1o_rvZTgS_o"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/makeoffer/5b7e43d0e48d694b81fc99e6",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"makeoffer",
+						"5b7e43d0e48d694b81fc99e6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign jobs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDE0NTg4LCJleHAiOjE1MzUwMjQ1ODh9.lhbBldP6JqJN0yGBJGh8fhdnhQAH-pivZv7CS1CdChs"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"fromUserId\":\"5b7d3b13d8567530da65f4f1\",\n\t\"toUserId\":\"5b7baf9df4dafb478a1ed9fa\",\n\t\"jobId\":\"5b7e43d0e48d694b81fc99e6\",\n\t\"lineItemId\":\"5b7d336542e4f2394f0c7d21\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/assignjobs",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"assignjobs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create review ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDE4MDUyLCJleHAiOjE1MzUwMjgwNTJ9.iei6qzIo2cqcPxofqqgKbUwfD6XtnVojO5dee3f4g0c"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fromUserId",
+							"value": "5b7d3b13d8567530da65f4f1",
+							"sessionValue": "5b7d3bd3438dd03c9a889d18",
+							"type": "text"
+						},
+						{
+							"key": "toUserId",
+							"value": "5b7baf9df4dafb478a1ed9fa",
+							"sessionValue": "5b7160acbaa2e941e2015504",
+							"type": "text"
+						},
+						{
+							"key": "review",
+							"value": "great job!",
+							"sessionValue": "great job!",
+							"type": "text"
+						},
+						{
+							"key": "ratings",
+							"value": "5",
+							"sessionValue": "5",
+							"type": "text"
+						},
+						{
+							"key": "pics",
+							"sessionValue": {
+								"0": {}
+							},
+							"type": "file"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/review",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"review"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get review",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiMTNkODU2NzUzMGRhNjVmNGYxIiwiaWF0IjoxNTM1MDE5NzIxLCJleHAiOjE1MzUwMjk3MjF9.X6mNipVY-HSQoJziXGH0GPhipm7NF_3RsKhlgRhyxUQ"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/review/5b7baf9df4dafb478a1ed9fa",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"review",
+						"5b7baf9df4dafb478a1ed9fa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search filter",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWI3ZDNiZDM0MzhkZDAzYzlhODg5ZDE4IiwiaWF0IjoxNTM1MTAyMTQ1LCJleHAiOjE1MzUxMTIxNDV9.Ohi7qf3galWSONcjQGo0yjAT80-OTFSRA4-9iRwYyaY"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/api/searchfilter/5b7d3bd3438dd03c9a889d18/?jobTrade=HVAC&isInterior=2&details=kitchen&jobLocation=noida",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"searchfilter",
+						"5b7d3bd3438dd03c9a889d18",
+						""
+					],
+					"query": [
+						{
+							"key": "jobTrade",
+							"value": "HVAC"
+						},
+						{
+							"key": "isInterior",
+							"value": "2"
+						},
+						{
+							"key": "details",
+							"value": "kitchen"
+						},
+						{
+							"key": "jobLocation",
+							"value": "noida"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

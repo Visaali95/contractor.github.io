@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const profileController = require("../controllers/profile.controller");
 const ConversationController = require("../controllers/conversation.controller");
 const reviewController = require("../controllers/review.controller");
 const assignJobsController = require("../controllers/assignjobs.controller");
@@ -212,7 +213,7 @@ router.get(
 router.post(
   "/profile/:_id",
   passport.authenticate("jwt", { session: false }),
-  CompanyController.profile
+  profileController.profile
 );
 
 //********* API DOCUMENTATION **********

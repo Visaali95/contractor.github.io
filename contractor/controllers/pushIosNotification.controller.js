@@ -11,7 +11,7 @@ if (CONFIG.app === "development") {
 
 module.exports = {
   iosPush: function(tokens, data) {
-    console.log("++++============>>>>>>>>>>>>>>>>>>>>>data", tokens, data);
+    console.log("++++data", tokens, data);
     let service = new apn.Provider({
       cert: path.join(__dirname, pathD), // insert pem file here
       key: path.join(__dirname, pathD), //// insert pem file here

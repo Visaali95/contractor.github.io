@@ -4,11 +4,11 @@ const _ = require("lodash");
 var multer = require("multer");
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // cb(
-    //   null,
-    //   "/home/parangat-pt-01/Documents/ParangatTechnologies/contractor_api/public/images/uploads"
-    // );
-    cb(null, "/home/ubuntu/api/public/images/uploads");
+    cb(
+      null,
+      "/home/parangat-pt-01/Documents/ParangatTechnologies/contractor_api/public/images/uploads"
+    );
+    // cb(null, "/home/ubuntu/api/public/images/uploads");
   },
   filename: (req, file, cb) => {
     cb(
