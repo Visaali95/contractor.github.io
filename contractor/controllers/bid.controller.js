@@ -27,3 +27,19 @@ const bidCreate = (req, res) => {
     });
 };
 module.exports.bidCreate = bidCreate;
+
+const bidGet = (req, res) => {
+  bid
+    .find({
+      $or: [{ jobId: req.params.jobId }, { lineItemId: req.params.jobId }]
+    })
+    .sort({ createdAt: -1 })
+    .populate("fromUserId toUserId")
+    .then(offers => {
+      return ReS(res, { message: "Updated Successfully", offers: offers });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.bidGet = bidGet;

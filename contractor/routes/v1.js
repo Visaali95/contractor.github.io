@@ -125,13 +125,23 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   jobController.editTask
 );
+router.put(
+  "/editroom/:_id",
+  passport.authenticate("jwt", { session: false }),
+  jobController.editRoom
+);
+router.put(
+  "/editlineheight/:_id",
+  passport.authenticate("jwt", { session: false }),
+  jobController.editLineHeight
+);
 
 router.get(
   "/search/:user_id",
   passport.authenticate("jwt", { session: false }),
   jobController.searchJobTitle
 );
-router.get(
+router.post(
   "/searchfilter/:user_id",
   passport.authenticate("jwt", { session: false }),
   jobController.searchFilter
@@ -157,6 +167,12 @@ router.post(
   "/bid",
   passport.authenticate("jwt", { session: false }),
   bidController.bidCreate
+);
+
+router.get(
+  "/bid/:jobId",
+  passport.authenticate("jwt", { session: false }),
+  bidController.bidGet
 );
 
 router.post(
@@ -216,6 +232,11 @@ router.post(
   profileController.profile
 );
 
+router.post(
+  "/jobcompleted",
+  passport.authenticate("jwt", { session: false }),
+  jobController.jobCompleted
+);
 //********* API DOCUMENTATION **********
 router.use(
   "/docs/api.json",

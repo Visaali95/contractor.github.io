@@ -87,6 +87,10 @@ const JobSchema = new mongoose.Schema(
       type: Number,
       trim: true
     },
+    geo: {
+      type: [Number],
+      index: "2d"
+    },
     propertyType: {
       type: String,
       required: true,
@@ -131,8 +135,13 @@ const JobSchema = new mongoose.Schema(
       required: true
     },
 
-    lineHeight: [lineHeightSchema]
+    lineHeight: [lineHeightSchema],
+    jobStatus: {
+      type: String,
+      enum: ["posted", "ongoing", "completed", "incomplete"]
+    }
   },
+
   { timestamps: true, versionKey: false }
 );
 

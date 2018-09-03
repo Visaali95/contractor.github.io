@@ -1,4 +1,7 @@
 const Jobs = require("../models/job.model");
+const makeOffer = require("../models/makeoffer.model");
+const assignJobs = require("../models/assignjobs.model");
+const bid = require("../models/bid.model");
 const User = require("../models/user.model");
 const company = require("../models/company.model");
 const { ReE, ReS } = require("../services/util.service");
@@ -6,6 +9,8 @@ const _ = require("lodash");
 const moment = require("moment");
 // job create or post job
 const create = (req, res) => {
+  req.body.geo = [req.body.latitude, req.body.longitude];
+  req.body.jobStatus = "posted";
   var JobSave = new Jobs(req.body);
   JobSave.save()
     .then(jobs => {
@@ -106,7 +111,7 @@ const jobDetails = (req, res) => {
 module.exports.jobDetails = jobDetails;
 // edit job or update job
 const editTask = (req, res) => {
-  Jobs.findByIdAndUpdate(
+  Jobs.findOneAndUpdate(
     { _id: req.params._id },
     {
       $set: req.body
@@ -123,9 +128,53 @@ const editTask = (req, res) => {
     });
 };
 module.exports.editTask = editTask;
+// edit rooms or update rooms
+const editRoom = (req, res) => {
+  Jobs.findOneAndUpdate(
+    { _id: req.params._id },
+    {
+      $set: { addRoom: req.body.addRoom }
+    },
+    {
+      upsert: true,
+      new: true
+    }
+  )
+    .then(room => {
+      return ReS(res, { message: "Updated Successfully", room: room });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.editRoom = editRoom;
+// edit lineHeight or update lineHeight
+const editLineHeight = (req, res) => {
+  Jobs.findOneAndUpdate(
+    { _id: req.params._id },
+    {
+      $set: { lineHeight: req.body.lineHeight }
+    },
+    {
+      upseert: true,
+      new: true
+    }
+  )
+    .then(lineHeight => {
+      return ReS(res, {
+        message: "Updated Successfully",
+        lineHeight: lineHeight
+      });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.editLineHeight = editLineHeight;
 //  dashboard
 const DashboardDetails = (req, res) => {
   var dashboard;
+  // posts section
   return Jobs.find({ user_id: req.params.user_id })
     .sort({ createdAt: -1 })
     .then(result => {
@@ -135,27 +184,71 @@ const DashboardDetails = (req, res) => {
         complete: [],
         inactive: []
       };
+      // inactive section
       result.map(exp => {
         if (!moment(exp.postExpiry).isSameOrBefore(new Date())) {
           dashboard.inactive.push(exp);
         }
       });
+      // jobs section
       return Jobs.find({ user_id: { $ne: req.params.user_id } })
         .sort({ createdAt: -1 })
         .then(jobs => {
-          dashboard.jobs = jobs;
-          return company
-            .find({ user: req.params.user_id })
-            .sort({ createdAt: -1 })
-            .then(company => {
-              dashboard.company = company;
-              return ReS(res, {
-                message: "Dashboard details",
-                dashboard: dashboard
-              });
+          return makeOffer
+            .find({
+              $or: [
+                { jobId: { $ne: req.params.jobId } },
+                { lineItemId: { $ne: req.params.jobId } }
+              ]
+            })
+            .then(mojobs => {
+              return bid
+                .find({
+                  $or: [
+                    { jobId: { $ne: req.params.jobId } },
+                    { lineItemId: { $ne: req.params.jobId } }
+                  ]
+                })
+                .then(bjobs => {
+                  dashboard.jobs = jobs;
+                  return company
+                    .find({ user: req.params.user_id })
+                    .sort({ createdAt: -1 })
+                    .then(company => {
+                      dashboard.company = company;
+
+                      // contracts section
+                      return Jobs.find({ user_id: req.params.user_id })
+                        .sort({ createdAt: -1 })
+                        .then(contracts => {
+                          return assignJobs
+                            .find({
+                              $or: [
+                                { jobId: req.params.jobId },
+                                { lineItemId: req.params.jobId }
+                              ]
+                            })
+                            .then(jobs => {
+                              dashboard.contracts = contracts;
+                              return Jobs.find({
+                                user_id: req.params.user_id,
+                                jobStatus: "completed"
+                              }).then(complete => {
+                                dashboard.complete = complete;
+
+                                return ReS(res, {
+                                  message: "Dashboard details",
+                                  dashboard: dashboard
+                                });
+                              });
+                            });
+                        });
+                    });
+                });
             });
         });
     })
+
     .catch(e => {
       return ReE(res, e, 422);
     });
@@ -198,23 +291,16 @@ module.exports.searchJobTitle = searchJobTitle;
 // search job by filter
 const searchFilter = (req, res) => {
   query = {
-    user_id: { $ne: req.params.user_id },
-    "lineHeight.jobTrade": req.query.jobTrade,
-    isInterior: req.query.isInterior,
-    "addRoom.details": req.query.details,
-    jobLocation: req.query.jobLocation
-    // latitude: req.query.latitude,
-    // logitude: req.query.longitude
-    // $geometry: {
-    //   $near: {
-    //     $geometry: {
-    //       type: "Point",
-    //       coordinates: [req.query.latitude, req.query.longitude]
-    //     },
-    //     $maxDistance: 50,
-    //     $minDistance: 0
-    //   }
-    // }
+    geo: {
+      $near: [req.body.latitude, req.body.longitude],
+      $maxDistance: 1000
+    },
+    $or: [
+      { user_id: { $ne: req.params.user_id } }, //not to show my jobs on my search
+      { "lineHeight.jobTrade": req.body.jobTrade },
+      { isInterior: req.body.isInterior },
+      { "addRoom.details": req.body.details }
+    ]
   };
 
   Jobs.find(query)
@@ -231,3 +317,21 @@ const searchFilter = (req, res) => {
     });
 };
 module.exports.searchFilter = searchFilter;
+
+const jobCompleted = (req, res) => {
+  Jobs.findOneAndUpdate(
+    { _id: req.body._id },
+    { $set: { jobStatus: "completed" } },
+    { upsert: true, new: true }
+  )
+    .then(result => {
+      if (result.length == 0) {
+        throw "Jobs not found";
+      }
+      return ReS(res, { message: "Updated Successfully", result: result });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.jobCompleted = jobCompleted;

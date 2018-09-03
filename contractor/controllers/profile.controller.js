@@ -68,6 +68,7 @@ const profile = (req, res) => {
             $set: {
               companyAbout: req.body.companyAbout,
               companySocial: req.body.companySocial,
+              isLicense: req.body.isLicense,
               companyLicense: req.body.companyLicense[0]
             }
           },

@@ -14,6 +14,10 @@ let CompanySchema = mongoose.Schema(
     pictures: { type: String },
     companyAbout: { type: String },
     companySocial: { type: String },
+    isLicense: {
+      type: Number,
+      enum: [0, 1]
+    },
     companyLicense: { type: String }
   },
   { timestamps: true }
