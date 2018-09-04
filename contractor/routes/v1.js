@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+const supportFAQController = require("../controllers/supportfaq.controller");
+const supportController = require("../controllers/support.controller");
+const feedbackController = require("../controllers/feedback.controller");
+const aboutUsController = require("../controllers/aboutus.controller");
 const profileController = require("../controllers/profile.controller");
 const ConversationController = require("../controllers/conversation.controller");
 const reviewController = require("../controllers/review.controller");
@@ -237,6 +241,23 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   jobController.jobCompleted
 );
+
+router.post("/aboutus", aboutUsController.aboutUsCreate);
+
+router.post(
+  "/feedback",
+  passport.authenticate("jwt", { session: false }),
+  feedbackController.feedbackCreate
+);
+
+router.post(
+  "/support",
+  passport.authenticate("jwt", { session: false }),
+  supportController.create
+);
+
+router.post("/supportfaqs", supportFAQController.create);
+router.get("/supportfaqs", supportFAQController.fetch);
 //********* API DOCUMENTATION **********
 router.use(
   "/docs/api.json",

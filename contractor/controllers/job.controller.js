@@ -140,8 +140,11 @@ const editRoom = (req, res) => {
       new: true
     }
   )
-    .then(room => {
-      return ReS(res, { message: "Updated Successfully", room: room });
+    .then(rooms => {
+      return ReS(res, {
+        message: "Updated Successfully",
+        rooms: rooms.addRoom
+      });
     })
     .catch(e => {
       return ReE(res, e, 422);
@@ -163,7 +166,7 @@ const editLineHeight = (req, res) => {
     .then(lineHeight => {
       return ReS(res, {
         message: "Updated Successfully",
-        lineHeight: lineHeight
+        lineHeight: lineHeight.lineHeight
       });
     })
     .catch(e => {
@@ -174,51 +177,57 @@ module.exports.editLineHeight = editLineHeight;
 //  dashboard
 const DashboardDetails = (req, res) => {
   var dashboard;
+
   // posts section
   return Jobs.find({ user_id: req.params.user_id })
     .sort({ createdAt: -1 })
     .then(result => {
       dashboard = {
-        contracts: [],
         post: result,
-        complete: [],
         inactive: []
       };
-      // inactive section
-      result.map(exp => {
-        if (!moment(exp.postExpiry).isSameOrBefore(new Date())) {
-          dashboard.inactive.push(exp);
-        }
-      });
-      // jobs section
-      return Jobs.find({ user_id: { $ne: req.params.user_id } })
+      // company info section
+      return company
+        .find({ user: req.params.user_id })
         .sort({ createdAt: -1 })
-        .then(jobs => {
-          return makeOffer
-            .find({
-              $or: [
-                { jobId: { $ne: req.params.jobId } },
-                { lineItemId: { $ne: req.params.jobId } }
-              ]
-            })
-            .then(mojobs => {
-              return bid
+        .then(company => {
+          dashboard.company = company;
+          // inactive section
+          result.map(exp => {
+            if (moment(exp.postExpiry).isSameOrBefore(new Date())) {
+              dashboard.inactive.push(exp);
+            }
+          });
+          // jobs section
+          return Jobs.find({
+            user_id: { $ne: req.params.user_id },
+            jobStatus: { $ne: "complete" }
+          })
+            .sort({ createdAt: -1 })
+            .then(jobs => {
+              return makeOffer
                 .find({
                   $or: [
                     { jobId: { $ne: req.params.jobId } },
                     { lineItemId: { $ne: req.params.jobId } }
                   ]
                 })
-                .then(bjobs => {
-                  dashboard.jobs = jobs;
-                  return company
-                    .find({ user: req.params.user_id })
-                    .sort({ createdAt: -1 })
-                    .then(company => {
-                      dashboard.company = company;
+                .then(mojobs => {
+                  return bid
+                    .find({
+                      $or: [
+                        { jobId: { $ne: req.params.jobId } },
+                        { lineItemId: { $ne: req.params.jobId } }
+                      ]
+                    })
+                    .then(bjobs => {
+                      dashboard.jobs = jobs;
 
                       // contracts section
-                      return Jobs.find({ user_id: req.params.user_id })
+                      return Jobs.find({
+                        user_id: req.params.user_id,
+                        jobStatus: { $ne: "completed" }
+                      })
                         .sort({ createdAt: -1 })
                         .then(contracts => {
                           return assignJobs
@@ -230,15 +239,22 @@ const DashboardDetails = (req, res) => {
                             })
                             .then(jobs => {
                               dashboard.contracts = contracts;
+                              // complete posts section
                               return Jobs.find({
                                 user_id: req.params.user_id,
                                 jobStatus: "completed"
-                              }).then(complete => {
-                                dashboard.complete = complete;
-
-                                return ReS(res, {
-                                  message: "Dashboard details",
-                                  dashboard: dashboard
+                              }).then(completePosts => {
+                                dashboard.completePosts = completePosts;
+                                // complete contracts section
+                                return Jobs.find({
+                                  user_id: { $ne: req.params.user_id },
+                                  jobStatus: "completed"
+                                }).then(completeContracts => {
+                                  dashboard.completeContracts = completeContracts;
+                                  return ReS(res, {
+                                    message: "Dashboard details",
+                                    dashboard: dashboard
+                                  });
                                 });
                               });
                             });
@@ -317,7 +333,7 @@ const searchFilter = (req, res) => {
     });
 };
 module.exports.searchFilter = searchFilter;
-
+//  job completed
 const jobCompleted = (req, res) => {
   Jobs.findOneAndUpdate(
     { _id: req.body._id },

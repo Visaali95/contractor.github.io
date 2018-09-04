@@ -1,4 +1,4 @@
-const review = require("../models/review.model");
+const aboutus = require("../models/aboutus.model");
 const { ReE, ReS } = require("../services/util.service");
 const _ = require("lodash");
 var multer = require("multer");
@@ -25,52 +25,38 @@ var storage = multer.diskStorage({
   }
 });
 var upload = multer({ storage: storage }).fields([
-  { name: "pics", maxCount: 20 }
+  { name: "about", maxCount: 1 }
 ]);
-const reviewCreate = (req, res) => {
+const aboutUsCreate = (req, res) => {
   res.setHeader("Content-Type", "application/json");
   let err, company;
 
   upload(req, res, function(err) {
-    var review_info = req.body;
+    var aboutUs_info = req.body;
 
     if (err) {
       return ReE(res, err, 422);
     }
     if (req.files) {
-      var reviewpics = [];
-      var pics = req.files.pics;
-      if (Array.isArray(pics)) {
-        for (var val of pics) {
-          reviewpics.push("http://18.222.231.171:8081/" + val.filename);
+      var aboutUs = [];
+      var about = req.files.about;
+      if (Array.isArray(about)) {
+        for (var val of about) {
+          aboutUs.push("http://18.222.231.171:8081/" + val.filename);
         }
-        review_info.reviewpics = reviewpics;
+        aboutUs_info.aboutUs = aboutUs;
       } else {
-        review_info.reviewpics = req.files.pics[0].filename;
+        aboutUs_info.aboutUs = req.files.about[0].filename;
       }
     }
-    review
-      .create(review_info)
-      .then(review => {
-        return ReS(res, { message: "Updated Successfully", review: review });
+    aboutus
+      .create(aboutUs_info)
+      .then(aboutUs => {
+        return ReS(res, { message: "Updated Successfully", aboutUs: aboutUs });
       })
       .catch(e => {
         return ReE(res, e, 422);
       });
   });
 };
-module.exports.reviewCreate = reviewCreate;
-
-const reviewGet = (req, res) => {
-  review
-    .find({ toUserId: req.params.toUserId })
-    .sort({ createdAt: -1 })
-    .populate("fromUserId toUserId")
-    .then(reviews => {
-      return ReS(res, { message: "Updated Successfully", reviews: reviews });
-    })
-    .catch(e => {
-      return ReE(res, e, 422);
-    });
-};
-module.exports.reviewGet = reviewGet;
+module.exports.aboutUsCreate = aboutUsCreate;
