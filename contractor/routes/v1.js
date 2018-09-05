@@ -235,6 +235,11 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   profileController.profile
 );
+router.get(
+  "/profile/:_id",
+  passport.authenticate("jwt", { session: false }),
+  profileController.profileGet
+);
 
 router.post(
   "/jobcompleted",

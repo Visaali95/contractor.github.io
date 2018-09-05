@@ -82,9 +82,9 @@ const profile = (req, res) => {
             about: result
           };
           return review
-            .findOne({ toUserId: req.body.toUserId }, { reviewpics: 1 }) //send the logged in user id
+            .findOne({ toUserId: result.user }) //send the logged in user id
             .then(galleryReview => {
-              profileDetails.galleryReview = galleryReview;
+              profileDetails.galleryReview = galleryReview.reviewpics;
               return ReS(res, {
                 message: "profile details",
                 profileDetails: profileDetails
@@ -98,3 +98,31 @@ const profile = (req, res) => {
   });
 };
 module.exports.profile = profile;
+
+const profileGet = (req, res) => {
+  var profileDetails;
+
+  return company
+    .findOne({ _id: req.params._id })
+    .sort({ createdAt: -1 })
+    .then(result => {
+      profileDetails = {
+        galleryCompany: result.pictures,
+        galleryReview: [],
+        about: result
+      };
+      return review
+        .findOne({ toUserId: result.user }) //send the logged in user id
+        .then(galleryReview => {
+          profileDetails.galleryReview = galleryReview.reviewpics;
+          return ReS(res, {
+            message: "profile details",
+            profileDetails: profileDetails
+          });
+        });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.profileGet = profileGet;

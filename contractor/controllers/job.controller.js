@@ -306,22 +306,41 @@ const searchJobTitle = (req, res) => {
 module.exports.searchJobTitle = searchJobTitle;
 // search job by filter
 const searchFilter = (req, res) => {
-  query = {
-    geo: {
-      $near: [req.body.latitude, req.body.longitude],
-      $maxDistance: 1000
-    },
-    $or: [
-      { user_id: { $ne: req.params.user_id } }, //not to show my jobs on my search
-      { "lineHeight.jobTrade": req.body.jobTrade },
-      { isInterior: req.body.isInterior },
-      { "addRoom.details": req.body.details }
-    ]
+  let geoArr, query, geo, or, jobLoc, user;
+
+  or = [
+    { user_id: { $ne: req.params.user_id } }, //not to show my jobs on my search
+    { "lineHeight.jobTrade": req.body.jobTrade },
+    { isInterior: req.body.isInterior },
+    { "addRoom.details": req.body.details }
+  ];
+
+  user = { $ne: req.params.user_id };
+  jobLoc = {
+    $regex: req.body.jobLocation,
+    $options: "i"
   };
+
+  if (!req.body.latitude && !req.body.longitude && !req.body.jobLocation) {
+    query = { $or: or, user };
+  } else if (req.body.jobLocation) {
+    query = { $or: or, user_id: user, jobLocation: jobLoc };
+  } else {
+    geoArr = [req.body.latitude, req.body.longitude];
+
+    query = {
+      geo: {
+        $near: geoArr,
+        $maxDistance: 1000
+      },
+      $or: or,
+      user_id: user
+    };
+  }
 
   Jobs.find(query)
     .sort({ createdAt: -1 })
-    .limit(20)
+
     .then(result => {
       if (result.length == 0) {
         throw "Jobs not found";
