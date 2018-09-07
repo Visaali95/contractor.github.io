@@ -60,7 +60,8 @@ let UserSchema = mongoose.Schema(
       type: String,
       trim: true
     },
-    deviceToken: String
+    deviceToken: String,
+    userImg: String
   },
   {
     versionKey: false,

@@ -25,15 +25,21 @@ var storage = multer.diskStorage({
 });
 //var upload = multer({storage: storage}).single('image');
 //var upload = multer().array('photos',10);
-var upload = multer({ storage: storage }).fields([
-  { name: "image", maxCount: 1 },
-  { name: "photos", maxCount: 8 }
-]);
+var upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1073741824
+  }
+}).fields([{ name: "image", maxCount: 1 }, { name: "photos", maxCount: 20 }]);
+// var upload = multer({storage:storage,limitlimits: {
+//   fileSize: 1024 * 1024 * 1024
+// }}).array()
 const create = async function(req, res) {
   res.setHeader("Content-Type", "application/json");
   let err, company;
-
+  console.log(req.body);
   upload(req, res, function(err) {
+    console.log(req.files);
     let user = req.user;
     var company_info = req.body;
     company_info.user = user._id;
@@ -43,26 +49,19 @@ const create = async function(req, res) {
       return ReE(res, err, 422);
     }
     if (req.files) {
-      var logo = [];
       var logos = req.files.image;
-      if (Array.isArray(logos)) {
-        for (var val of logos) {
-          logo.push("http://18.222.231.171:8081/" + val.filename);
-        }
-        company_info.logo = logo;
-      } else {
-        company_info.logo = req.files.logos[0].filename;
-      }
+      logos.map((logo, i, logos) => {
+        logos[i] = "http://18.222.231.171:8081/" + logo.filename;
+      });
+      company_info.logo = logos;
+
       var pictures = [];
       var photos = req.files.photos;
-      if (Array.isArray(photos)) {
-        for (var val of photos) {
-          pictures.push("http://18.222.231.171:8081/" + val.filename);
-        }
-        company_info.pictures = pictures;
-      } else {
-        company_info.pictures = req.files.photos[0].filename;
-      }
+      photos.map((photo, i) => {
+        pictures.push("http://18.222.231.171:8081/" + photo.filename);
+      });
+      company_info.pictures = pictures;
+
       //console.log(company_info);
       Company.create(company_info, function(err, company) {
         if (err) return ReE(res, err, 422);

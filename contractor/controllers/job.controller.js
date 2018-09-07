@@ -340,7 +340,7 @@ const searchFilter = (req, res) => {
 
   Jobs.find(query)
     .sort({ createdAt: -1 })
-
+    .limit(20)
     .then(result => {
       if (result.length == 0) {
         throw "Jobs not found";

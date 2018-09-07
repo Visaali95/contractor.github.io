@@ -38,12 +38,20 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("html", require("jade").renderFile);
 app.set("view engine", "html");
 
+// set limit of request uploading
+app.use(bodyParser.json({ limit: "1073741824" }));
+app.use(bodyParser.urlencoded({ limit: "1073741824", extended: true }));
+
 app.use("/api", v1);
 // app.use('/api', job);
 
 app.use("/", function(req, res) {
-  res.statusCode = 200; //send the appropriate status code
-  res.json({ status: "success", message: "Parcel Pending API", data: {} });
+  res.statusCode = 400; //send the appropriate status code
+  res.json({
+    status: null,
+    message: "API does not exist. Please check the URL",
+    data: {}
+  });
 });
 
 //catch 404 and forward to error handler

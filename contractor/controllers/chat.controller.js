@@ -3,7 +3,7 @@ const { ReE, ReS } = require("../services/util.service");
 const User = require("../models/user.model");
 const _ = require("lodash");
 const pushNotification = require("../controllers/pushIosNotification.controller");
-
+const androidNotification = require("../controllers/pushAndroidNotification.controller");
 const ChatCreate = (req, res) => {
   Chat.findOneAndUpdate(
     { conversationId: req.params.conversationId },
@@ -15,13 +15,19 @@ const ChatCreate = (req, res) => {
     }
   )
     .then(chats => {
-      return User.findOne({ _id: req.body.toUserId }).then(user => {
-        pushNotification.iosPush(user.deviceToken, {
-          message: `${user.first} has sent you a message`
-        });
-        return ReS(res, {
-          message: "Updated Successfully",
-          chats: chats
+      return User.findOne({ _id: req.body.toUserId }).then(receiver => {
+        return User.findOne({ _id: req.body.fromUserId }).then(sender => {
+          let msg = `${sender.first} has sent you a message`;
+          pushNotification.iosPush(receiver.deviceToken, {
+            message: msg
+          });
+          androidNotification.androidPush(receiver.deviceToken, {
+            message: msg
+          });
+          return ReS(res, {
+            message: "Updated Successfully",
+            chats: chats
+          });
         });
       });
     })

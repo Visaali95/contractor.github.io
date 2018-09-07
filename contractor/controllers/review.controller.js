@@ -24,9 +24,12 @@ var storage = multer.diskStorage({
     cb(null, true);
   }
 });
-var upload = multer({ storage: storage }).fields([
-  { name: "pics", maxCount: 20 }
-]);
+var upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1073741824
+  }
+}).fields([{ name: "pics", maxCount: 20 }]);
 const reviewCreate = (req, res) => {
   res.setHeader("Content-Type", "application/json");
   let err, company;
@@ -40,15 +43,12 @@ const reviewCreate = (req, res) => {
     if (req.files) {
       var reviewpics = [];
       var pics = req.files.pics;
-      if (Array.isArray(pics)) {
-        for (var val of pics) {
-          reviewpics.push("http://18.222.231.171:8081/" + val.filename);
-        }
-        review_info.reviewpics = reviewpics;
-      } else {
-        review_info.reviewpics = req.files.pics[0].filename;
-      }
+      pics.map(photo => {
+        reviewpics.push("http://18.222.231.171:8081/" + photo.filename);
+      });
+      review_info.reviewpics = reviewpics;
     }
+
     review
       .create(review_info)
       .then(review => {

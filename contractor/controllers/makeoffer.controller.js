@@ -6,6 +6,7 @@ const pushNotification = require("../controllers/pushIosNotification.controller"
 const androidNotification = require("../controllers/pushAndroidNotification.controller");
 const _ = require("lodash");
 const User = require("../models/user.model");
+const bid = require("../models/bid.model");
 const makeOfferCreate = (req, res) => {
   var makeOfferSave = new makeOffer(req.body);
   makeOfferSave
@@ -44,7 +45,22 @@ const makeOfferGet = (req, res) => {
     .sort({ createdAt: -1 })
     .populate("fromUserId toUserId")
     .then(offers => {
-      return ReS(res, { message: "Updated Successfully", offers: offers });
+      if (offers.length == 0) {
+        return bid
+          .find({
+            $or: [{ jobId: req.params.jobId }, { lineItemId: req.params.jobId }]
+          })
+          .sort({ createdAt: -1 })
+          .populate("fromUserId toUserId")
+          .then(offers => {
+            return ReS(res, {
+              message: "Updated Successfully",
+              offers: offers
+            });
+          });
+      } else {
+        return ReS(res, { message: "Updated Successfully", offers: offers });
+      }
     })
     .catch(e => {
       return ReE(res, e, 422);

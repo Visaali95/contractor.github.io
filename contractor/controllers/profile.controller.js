@@ -31,8 +31,6 @@ var storage = multer.diskStorage({
 //var upload = multer({storage: storage}).single('image');
 //var upload = multer().array('photos',10);
 var upload = multer({ storage: storage }).fields([
-  { name: "image", maxCount: 1 },
-  { name: "photos", maxCount: 8 },
   { name: "license", maxCount: 1 }
 ]);
 
@@ -53,48 +51,51 @@ const profile = (req, res) => {
     if (req.files) {
       var companyLicense = [];
       var license = req.files.license;
-      if (Array.isArray(license)) {
-        for (var val of license) {
-          companyLicense.push("http://18.222.231.171:8081/" + val.filename);
-        }
-        company_info.companyLicense = companyLicense;
-      } else {
-        company_info.companyLicense = req.files.license[0].filename;
-      }
-      return company
-        .findByIdAndUpdate(
-          { _id: req.params._id },
-          {
-            $set: {
-              companyAbout: req.body.companyAbout,
-              companySocial: req.body.companySocial,
-              isLicense: req.body.isLicense,
-              companyLicense: req.body.companyLicense[0]
-            }
-          },
-          { upsert: true, new: true }
-        )
-        .sort({ createdAt: -1 })
-        .then(result => {
-          profileDetails = {
-            galleryCompany: result.pictures,
-            galleryReview: [],
-            about: result
-          };
-          return review
-            .findOne({ toUserId: result.user }) //send the logged in user id
-            .then(galleryReview => {
-              profileDetails.galleryReview = galleryReview.reviewpics;
-              return ReS(res, {
-                message: "profile details",
-                profileDetails: profileDetails
-              });
-            });
-        })
-        .catch(e => {
-          return ReE(res, e, 422);
+      if (license == undefined) {
+        companyLicense = "";
+      } else
+        license.map(photo => {
+          companyLicense.push("http://18.222.231.171:8081/" + photo.filename);
         });
+      company_info.companyLicense = companyLicense;
     }
+    return company
+      .findByIdAndUpdate(
+        { _id: req.params._id },
+        {
+          $set: {
+            companyAbout: req.body.companyAbout,
+            companySocial: req.body.companySocial,
+            isLicense: req.body.isLicense,
+            companyLicense: req.body.companyLicense[0]
+          }
+        },
+        { upsert: true, new: true }
+      )
+      .sort({ createdAt: -1 })
+      .then(result => {
+        profileDetails = {
+          galleryCompany: result.pictures,
+          galleryReview: [],
+          about: result
+        };
+        return review
+          .findOne({ toUserId: result.user }) //send the logged in user id
+          .then(galleryReview => {
+            if (galleryReview == null) {
+              profileDetails.galleryReview = "";
+            } else {
+              profileDetails.galleryReview = galleryReview.reviewpics;
+            }
+            return ReS(res, {
+              message: "profile details",
+              profileDetails: profileDetails
+            });
+          });
+      })
+      .catch(e => {
+        return ReE(res, e, 422);
+      });
   });
 };
 module.exports.profile = profile;
@@ -103,18 +104,47 @@ const profileGet = (req, res) => {
   var profileDetails;
 
   return company
-    .findOne({ _id: req.params._id })
+    .findOne({ user: req.params._id })
     .sort({ createdAt: -1 })
     .then(result => {
-      profileDetails = {
-        galleryCompany: result.pictures,
-        galleryReview: [],
-        about: result
-      };
+      if (!result) {
+        return User.findOne({ _id: req.params._id })
+          .sort({ createdAt: -1 })
+          .then(user => {
+            profileDetails = {
+              galleryCompany: [],
+              galleryReview: [],
+              about: user
+            };
+            return review
+              .findOne({ toUserId: user._id }) //send the logged in user id
+              .then(galleryReview => {
+                if (galleryReview == null) {
+                  profileDetails.galleryReview = "";
+                } else {
+                  profileDetails.galleryReview = galleryReview.reviewpics;
+                }
+                return ReS(res, {
+                  message: "profile details",
+                  profileDetails: profileDetails
+                });
+              });
+          });
+      } else {
+        profileDetails = {
+          galleryCompany: result.pictures,
+          galleryReview: [],
+          about: result
+        };
+      }
       return review
         .findOne({ toUserId: result.user }) //send the logged in user id
         .then(galleryReview => {
-          profileDetails.galleryReview = galleryReview.reviewpics;
+          if (galleryReview == null) {
+            profileDetails.galleryReview = [];
+          } else {
+            profileDetails.galleryReview = galleryReview.reviewpics;
+          }
           return ReS(res, {
             message: "profile details",
             profileDetails: profileDetails

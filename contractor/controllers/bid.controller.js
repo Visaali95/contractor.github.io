@@ -1,6 +1,10 @@
 const bid = require("../models/bid.model");
+const User = require("../models/user.model");
+const notification = require("../models/notification.model");
+const pushNotification = require("../controllers/pushIosNotification.controller");
 const { ReE, ReS } = require("../services/util.service");
 const _ = require("lodash");
+const androidNotification = require("../controllers/pushAndroidNotification.controller");
 
 const bidCreate = (req, res) => {
   var bidSave = new bid(req.body);
@@ -13,9 +17,12 @@ const bidCreate = (req, res) => {
           pushNotification.iosPush(receiver.deviceToken, {
             message: msg
           });
+          androidNotification.androidPush(receiver.deviceToken, {
+            message: msg
+          });
           var notificationSave = new notification({
             messages: msg,
-            toUserId: user._id
+            toUserId: receiver._id
           });
           notificationSave.save();
           return ReS(res, { message: "Updated Successfully", offer: offer });
