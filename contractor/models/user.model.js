@@ -9,20 +9,29 @@ const CONFIG = require("../config/config");
 
 let UserSchema = mongoose.Schema(
   {
-    first: { type: String },
-    last: { type: String },
+    first: { type: String, default: "" },
+    last: { type: String, default: "" },
     phone: {
       type: String,
+      required: false,
       lowercase: true,
       trim: true,
       index: true, //sparse is because now we have two possible unique keys that are optional
-      validate: [
-        validate({
-          validator: "isNumeric",
-          arguments: [7, 20],
-          message: "Not a valid phone number."
-        })
-      ]
+      default: true,
+      validate: {
+        validator: function(v) {
+          var re = /^\d{10}$/;
+          return v == null || v.trim().length < 1 || re.test(v);
+        },
+        message: "Provided phone number is invalid."
+      }
+      // validate: [
+      //   validate({
+      //     validator: "isNumeric",
+      //     arguments: [7, 20],
+      //     message: "Not a valid phone number."
+      //   })
+      // ]
     },
     email: {
       type: String,
@@ -36,7 +45,7 @@ let UserSchema = mongoose.Schema(
         })
       ]
     },
-    password: { type: String },
+    password: { type: String, default: "" },
     postcode: {
       type: String,
       validate: [
@@ -46,22 +55,34 @@ let UserSchema = mongoose.Schema(
         })
       ]
     },
-    fbid: { type: String, trim: true, index: true },
-    twitterid: { type: String, trim: true, index: true },
-    pintrestid: { type: String, trim: true, index: true },
-    instaid: { type: String, trim: true, index: true },
+    fbid: { type: String, trim: true, index: true, default: "" },
+    twitterid: { type: String, trim: true, index: true, default: "" },
+    pintrestid: { type: String, trim: true, index: true, default: "" },
+    instaid: { type: String, trim: true, index: true, default: "" },
     userType: {
       type: String,
       trim: true,
-      enum: ["Builder", "Contractor", "Sub-contractor", "independent"]
+      enum: ["Builder", "Contractor", "Sub-contractor", "independent", ""],
+      default: ""
     },
-    status: { type: Boolean },
+    status: { type: Boolean, default: true },
     otp: {
       type: String,
-      trim: true
+      trim: true,
+      default: ""
     },
-    deviceToken: String,
-    userImg: String
+    deviceToken: { type: String, default: "" },
+    userImg: { type: String, default: "" },
+    isEmailUpdates: { type: Boolean, default: false },
+    isAcceptTerms: { type: Boolean, default: false },
+    isSignUpDetails: { type: Boolean },
+    isSignUpProfile: { type: Boolean, default: false },
+    isSignUpCompany: { type: Boolean, default: false },
+    userRole: {
+      type: String,
+      enum: ["Super Admin", "Admin", "User"],
+      default: "User"
+    }
   },
   {
     versionKey: false,
@@ -139,5 +160,4 @@ UserSchema.methods.toWeb = function() {
   json.id = this._id; //this is for the front end
   return json;
 };
-
 let User = (module.exports = mongoose.model("User", UserSchema));

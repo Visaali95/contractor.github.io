@@ -38,60 +38,80 @@ const createUser = async function(userInfo) {
   if (!unique_key)
     TE("An email or phone number or social media was not entered.");
 
-  let validationError = "";
-  if (userInfo.email != "") {
-    //console.log(userInfo);
-    if (validator.isEmail(userInfo.email)) {
-      auth_info.method = "email";
-      //userInfo.email = unique_key;
-      [err, user] = await to(User.findOne({ email: userInfo.email }));
-      //console.log(JSON.stringify(user));
-      if (Boolean(user)) TE("Email id already exits");
-    } else {
-      TE("wrong emailid format");
+  if (!userInfo.email || userInfo.phone == "" || userInfo.password == "") {
+    if (userInfo.fbid) {
+      [err, user] = await to(User.findOne({ fbid: userInfo.fbid }));
+      userInfo.password = "123";
+      userInfo.postcode = "123456";
+      userInfo.isEmailUpdates = true;
+      userInfo.isAcceptTerms = true;
+      if (Boolean(user)) TE("Facebook id already exits");
+    }
+    if (userInfo.twitterid) {
+      userInfo.password = "123";
+      userInfo.postcode = "123456";
+      userInfo.isEmailUpdates = true;
+      userInfo.isAcceptTerms = true;
+      [err, user] = await to(User.findOne({ twitterid: userInfo.twitterid }));
+      if (Boolean(user)) TE("Twitter id already exits");
+    }
+    if (userInfo.pintrestid) {
+      userInfo.password = "123";
+      userInfo.postcode = "123456";
+      userInfo.email = "defaultid@email.com";
+      userInfo.isEmailUpdates = true;
+      userInfo.isAcceptTerms = true;
+      [err, user] = await to(User.findOne({ pintrestid: userInfo.pintrestid }));
+      if (Boolean(user)) TE("Pintrest id already exits");
+    }
+    if (userInfo.instaid) {
+      userInfo.password = "123";
+      userInfo.postcode = "123456";
+      userInfo.email = "defaultid@email.com";
+      userInfo.isEmailUpdates = true;
+      userInfo.isAcceptTerms = true;
+      [err, user] = await to(User.findOne({ instaid: userInfo.instaid }));
+      if (Boolean(user)) TE("Intstagram id already exits");
+    }
+  } else {
+    let validationError = "";
+    if (userInfo.email != "") {
+      //console.log(userInfo);
+      if (validator.isEmail(userInfo.email)) {
+        auth_info.method = "email";
+        //userInfo.email = unique_key;
+        [err, user] = await to(User.findOne({ email: userInfo.email }));
+        //console.log(JSON.stringify(user));
+        if (Boolean(user)) TE("Email id already exits");
+      } else {
+        TE("wrong emailid format");
+      }
+    }
+
+    if (userInfo.phone != "") {
+      //checks if only phone number was sent
+      //console.log("ddd"+userInfo.phone);
+      if (validator.isMobilePhone(userInfo.phone, "any")) {
+        auth_info.method = "phone";
+        console.log("kdkdk");
+        [err, user] = await to(User.findOne({ phone: userInfo.phone }));
+        if (err) TE(err.message);
+        if (Boolean(user)) TE("Phone number already exits");
+      } else {
+        TE("wrong phone format");
+      }
+      //[err, user] = await to(User.create(userInfo));
+      //if(err) TE('user already exists' +JSON.stringify(err));
+
+      //return user;
     }
   }
-
-  if (userInfo.phone != "") {
-    //checks if only phone number was sent
-    //console.log("ddd"+userInfo.phone);
-    if (validator.isMobilePhone(userInfo.phone, "any")) {
-      auth_info.method = "phone";
-      console.log("kdkdk");
-      [err, user] = await to(User.findOne({ phone: userInfo.phone }));
-      if (err) TE(err.message);
-      if (Boolean(user)) TE("Phone number already exits");
-    } else {
-      TE("wrong phone format");
-    }
-    //[err, user] = await to(User.create(userInfo));
-    //if(err) TE('user already exists' +JSON.stringify(err));
-
-    //return user;
-  }
-
-  if (userInfo.fbid) {
-    [err, user] = await to(User.findOne({ fbid: userInfo.fbid }));
-    userInfo.password = "123";
-    if (Boolean(user)) TE("Facebook id already exits");
-  }
-  if (userInfo.twitterid) {
-    userInfo.password = "123";
-    [err, user] = await to(User.findOne({ twitterid: userInfo.twitterid }));
-    if (Boolean(user)) TE("Twitter id already exits");
-  }
-  if (userInfo.pintrestid) {
-    userInfo.password = "123";
-    [err, user] = await to(User.findOne({ pintrestid: userInfo.pintrestid }));
-    if (Boolean(user)) TE("Pintrest id already exits");
-  }
-  if (userInfo.instaid) {
-    userInfo.password = "123";
-    [err, user] = await to(User.findOne({ instaid: userInfo.instaid }));
-    if (Boolean(user)) TE("Pintrest id already exits");
-  }
+  // if (!userInfo.userType) {
+  //   userInfo.userType = "";
+  // }
   //console.log(userInfo);
   userInfo.status = true;
+
   [err, user] = await to(User.create(userInfo));
   if (err) TE("Invalid Parameter" + JSON.stringify(err));
 

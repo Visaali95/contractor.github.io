@@ -2,7 +2,7 @@ const { User } = require("../models");
 const authService = require("../services/auth.service");
 const { to, ReE, ReS } = require("../services/util.service");
 const multer = require("multer");
-
+const _ = require("lodash");
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // cb(
@@ -40,18 +40,6 @@ const create = async function(req, res) {
     if (err) {
       return ReE(res, err, 422);
     }
-    if (req.files) {
-      var userImg = [];
-      var img = req.files.img;
-      if (img == undefined) {
-        userImg = "";
-      } else
-        img.map(photo => {
-          userImg.push("http://18.222.231.171:8081/" + photo.filename);
-        });
-      body.userImg = userImg;
-    }
-
     if (
       !body.email &&
       !body.phone &&
@@ -64,9 +52,17 @@ const create = async function(req, res) {
         res,
         "Please enter an email or phone number or social media to register."
       );
-    } else if ((body.email || body.phone) && !body.password) {
+    } else if (
+      (body.email || body.phone) &&
+      !body.password &&
+      !(body.fbid || body.instaid || body.twitterid || body.pintrestid)
+    ) {
       return ReE(res, "Please enter a password to register.");
-    } else if ((body.email || body.phone) && !body.postcode) {
+    } else if (
+      (body.email || body.phone) &&
+      !body.postcode &&
+      !(body.fbid || body.instaid || body.twitterid || body.pintrestid)
+    ) {
       return ReE(res, "Please enter a postcode");
     } else {
       let err, user;
@@ -130,6 +126,9 @@ const update = async function(req, res) {
           if (user) return ReE(res, "Phone number already exits");
         });
       } else {
+        if (req.body.userType) {
+          req.body.isSignUpProfile = true;
+        }
         User.findByIdAndUpdate(user._id, { $set: req.body }, function(
           err,
           result
@@ -137,6 +136,7 @@ const update = async function(req, res) {
           if (err) {
             return ReE(res, err);
           }
+
           // console.log("RESULT: " + result);
           return ReS(res, { message: "Updated Successfully" });
         });
@@ -145,39 +145,20 @@ const update = async function(req, res) {
       return ReE(res, "Invalid user token");
     }
   });
-  //console.log(user);
-  //err.message = 'Invalid user tokenn';
-  //return ReE(res, err);
-  //[err, user] = await to(user.save());
-  //return ReS(res, {message:user});
-  /*[err, user] = await to(user.save());
-    if(err){
-        console.log(err, user);
-
-        if(err.message.includes('E11000')){
-            if(err.message.includes('phone')){
-                err = 'This phone number is already in use';
-            } else if(err.message.includes('email')){
-                err = 'This email address is already in use';
-            }else{
-                err = 'Duplicate Key Entry';
-            }
-        }
-
-        return ReE(res, err);
-    }
-    return ReS(res, {message :'Updated User: '+user.email});*/
 };
 module.exports.update = update;
 
 const remove = async function(req, res) {
   let user, err;
   user = req.user;
+  if (!user.userRole == "Super Admin") {
+    [err, user] = await to(user.destroy());
+    if (err) return ReE(res, "error occured trying to delete user");
 
-  [err, user] = await to(user.destroy());
-  if (err) return ReE(res, "error occured trying to delete user");
-
-  return ReS(res, { message: "Deleted User" }, 204);
+    return ReS(res, { message: "Deleted User" }, 204);
+  } else {
+    return ReE(res, "Super Admin can't be deleted");
+  }
 };
 module.exports.remove = remove;
 
@@ -188,7 +169,24 @@ const login = async function(req, res) {
 
   [err, user] = await to(authService.authUser(req.body));
   if (err) return ReE(res, err, 422);
-
+  // if (user.userRole == "Super Admin" || user.userRole == "Admin") {
+  //   return ReS(res, { token: user.getJWT(), user: pickResponse(user) });
+  // } else {
+  if (!user.isSignUpProfile && user.userRole == "User") {
+    return ReS(res, {
+      message: "please fill profile type",
+      token: user.getJWT(),
+      user: user.toWeb()
+    });
+  }
+  if (!user.isSignUpCompany && user.userRole == "User") {
+    return ReS(res, {
+      message: "please fill company profile",
+      token: user.getJWT(),
+      user: user.toWeb()
+    });
+  }
   return ReS(res, { token: user.getJWT(), user: user.toWeb() });
+  //}
 };
 module.exports.login = login;

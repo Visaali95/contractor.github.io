@@ -7,7 +7,8 @@ const androidNotification = require("../controllers/pushAndroidNotification.cont
 const ConversationCreate = (req, res) => {
   Conversation.findOneAndUpdate(
     {
-      fromUserId: { $in: [req.body.fromUserId, req.body.toUserId] }
+      fromUserId: { $in: [req.body.fromUserId, req.body.toUserId] },
+      toUserId: { $in: [req.body.fromUserId, req.body.toUserId] }
     },
     {
       $set: {
@@ -94,14 +95,40 @@ const ConversationGet = (req, res) => {
 module.exports.ConversationGet = ConversationGet;
 
 const MessagesGet = (req, res) => {
-  Conversation.find({ _id: req.params.conversationId })
+  Conversation.find({
+    fromUserId: { $in: [req.query.fromUserId, req.query.toUserId] },
+    toUserId: { $in: [req.query.fromUserId, req.query.toUserId] }
+  })
     .sort({ createdAt: -1 })
     .populate("fromUserId toUserId ")
     .then(messages => {
-      return ReS(res, {
-        message: "Updated Successfully",
-        messages: messages
-      });
+      if (messages.length == 0) {
+        return Conversation.findOneAndUpdate(
+          {
+            fromUserId: { $in: [req.query.fromUserId, req.query.toUserId] },
+            toUserId: { $in: [req.query.fromUserId, req.query.toUserId] }
+          },
+          {
+            $set: {
+              fromUserId: req.query.fromUserId,
+              toUserId: req.query.toUserId
+            }
+          },
+          {
+            upsert: true,
+            new: true
+          }
+        ).then(messages => {
+          return ReS(res, {
+            message: "no messages yet to display",
+            messages: messages
+          });
+        });
+      } else
+        return ReS(res, {
+          message: "Updated Successfully",
+          messages: messages
+        });
     })
     .catch(e => {
       return ReE(res, e, 422);

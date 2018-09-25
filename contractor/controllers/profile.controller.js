@@ -83,7 +83,7 @@ const profile = (req, res) => {
           .findOne({ toUserId: result.user }) //send the logged in user id
           .then(galleryReview => {
             if (galleryReview == null) {
-              profileDetails.galleryReview = "";
+              profileDetails.galleryReview = [];
             } else {
               profileDetails.galleryReview = galleryReview.reviewpics;
             }
@@ -107,36 +107,36 @@ const profileGet = (req, res) => {
     .findOne({ user: req.params._id })
     .sort({ createdAt: -1 })
     .then(result => {
-      if (!result) {
-        return User.findOne({ _id: req.params._id })
-          .sort({ createdAt: -1 })
-          .then(user => {
-            profileDetails = {
-              galleryCompany: [],
-              galleryReview: [],
-              about: user
-            };
-            return review
-              .findOne({ toUserId: user._id }) //send the logged in user id
-              .then(galleryReview => {
-                if (galleryReview == null) {
-                  profileDetails.galleryReview = "";
-                } else {
-                  profileDetails.galleryReview = galleryReview.reviewpics;
-                }
-                return ReS(res, {
-                  message: "profile details",
-                  profileDetails: profileDetails
-                });
-              });
-          });
-      } else {
-        profileDetails = {
-          galleryCompany: result.pictures,
-          galleryReview: [],
-          about: result
-        };
-      }
+      // if (!result) {
+      //   return User.findOne({ _id: req.params._id })
+      //     .sort({ createdAt: -1 })
+      //     .then(user => {
+      //       profileDetails = {
+      //         galleryCompany: [],
+      //         galleryReview: [],
+      //         about: user
+      //       };
+      //       return review
+      //         .findOne({ toUserId: user._id }) //send the logged in user id
+      //         .then(galleryReview => {
+      //           if (galleryReview == null) {
+      //             profileDetails.galleryReview = "";
+      //           } else {
+      //             profileDetails.galleryReview = galleryReview.reviewpics;
+      //           }
+      //           return ReS(res, {
+      //             message: "profile details",
+      //             profileDetails: profileDetails
+      //           });
+      //         });
+      //     });
+      // } else {
+      profileDetails = {
+        galleryCompany: result.pictures,
+        galleryReview: [],
+        about: result
+      };
+      // }
       return review
         .findOne({ toUserId: result.user }) //send the logged in user id
         .then(galleryReview => {

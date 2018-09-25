@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const jobWorkSchema = new mongoose.Schema(
   {
-    jobWork: String
+    jobWork: { type: String, default: "" }
   },
   { versionKey: false }
 );

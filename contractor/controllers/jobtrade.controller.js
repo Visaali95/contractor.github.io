@@ -56,3 +56,72 @@ const createWork = (req, res) => {
     });
 };
 module.exports.createWork = createWork;
+
+module.exports.updateTrade = (req, res) => {
+  jobTrade
+    .findByIdAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      { upsert: true, new: true }
+    )
+    .then(jobtrade => {
+      return ReS(res, {
+        message: "jobTrade updated successfully",
+        jobtrade: jobtrade
+      });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.updateWork = (req, res) => {
+  jobWork
+    .findByIdAndUpdate(
+      { _id: req.body._id },
+      { $set: req.body },
+      { upsert: true, new: true }
+    )
+    .then(jobWork => {
+      return ReS(res, {
+        message: "jobWork updated successfully",
+        jobWork: jobWork
+      });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+module.exports.deleteTrade = (req, res) => {
+  jobTrade
+    .findByIdAndRemove({ _id: req.body._id })
+    .then(jobTrade => {
+      if (!jobTrade) {
+        throw "id doesnt exist to delete";
+      }
+
+      return ReS(res, {
+        message: "jobTrade is removed successfully",
+        jobTrade: jobTrade
+      });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};
+
+module.exports.deleteWork = (req, res) => {
+  jobWork
+    .findByIdAndRemove({ _id: req.body._id })
+    .then(jobWork => {
+      if (!jobWork) {
+        throw "id doesnt exist to delete";
+      }
+      return ReS(res, {
+        message: "jobWork is removed successfully",
+        jobWork: jobWork
+      });
+    })
+    .catch(e => {
+      return ReE(res, e, 422);
+    });
+};

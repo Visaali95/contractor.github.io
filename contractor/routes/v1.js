@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const contractEditController = require("../controllers/contractedit.controller");
+const testController = require("../controllers/test.controller");
+const AdminController = require("../controllers/admin.controller");
 const supportFAQController = require("../controllers/supportfaq.controller");
 const supportController = require("../controllers/support.controller");
 const feedbackController = require("../controllers/feedback.controller");
@@ -19,14 +22,29 @@ const jobController = require("../controllers/job.controller");
 const UserController = require("../controllers/user.controller");
 const CompanyController = require("../controllers/company.controller");
 const HomeController = require("../controllers/home.controller");
-
+const paymentController = require("../controllers/payment.controller");
 const custom = require("./../middleware/custom");
-
+const settingController = require("../controllers/setting.controller");
 const passport = require("passport");
 const path = require("path");
-
+const keyPublishable = "pk_test_wa7eDXkd2ZhojTyzNHQ1epk7";
+const keySecret = "sk_test_AtgHQGrxpvffnRPv5GqoG6Pm";
+const stripe = require("stripe")(keySecret);
 require("./../middleware/passport")(passport);
 /* GET home page. */
+
+router.post("/payment", paymentController.payment);
+
+// setting for contract
+
+router.get(
+  "/getAllSetting",
+  passport.authenticate("jwt", { session: false }),
+  settingController.getAllSetting
+);
+router.get("/setting", settingController.contract);
+router.post("/setting", settingController.addSetting);
+router.get("/getimages", settingController.getimages);
 
 router.get("/", function(req, res, next) {
   res.json({
@@ -35,6 +53,7 @@ router.get("/", function(req, res, next) {
     data: { version_number: "v1.0.0" }
   });
 });
+// normal users
 
 router.post("/users", UserController.create); // C
 router.get(
@@ -53,6 +72,60 @@ router.delete(
   UserController.remove
 ); // D
 router.post("/users/login", UserController.login);
+// admin and super admin
+
+router.post("/admin", AdminController.create); // C
+router.get(
+  "/admin",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.getAll
+); //   // R
+router.put(
+  "/admin",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.update
+); // U
+router.delete(
+  "/admin",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.remove
+); // D
+router.get(
+  "/admin/dashboard",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminDashboard
+); //   // R
+router.post("/admin/login", AdminController.login);
+router.get(
+  "/admin/userlist",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminUserList
+);
+router.get(
+  "/admin/joblist",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminJobList
+);
+router.get(
+  "/admin/companylist",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminCompanyList
+);
+router.get(
+  "/admin/contractlist",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminContractList
+);
+router.put(
+  "/admin/jobstatus",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminJobStatus
+);
+router.put(
+  "/admin/userstatus",
+  passport.authenticate("jwt", { session: false }),
+  AdminController.adminUserStatus
+);
 
 router.post(
   "/companies",
@@ -150,10 +223,14 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   jobController.searchFilter
 );
-
+// jobtrade and work crud
 router.post("/jobtrade", jobTradeController.create);
 router.get("/jobtradeandwork", jobTradeController.fetch);
 router.post("/jobwork", jobTradeController.createWork);
+router.put("/jobtrade", jobTradeController.updateTrade);
+router.delete("/jobtrade", jobTradeController.deleteTrade);
+router.put("/jobwork", jobTradeController.updateWork);
+router.delete("/jobwork", jobTradeController.deleteWork);
 
 router.post(
   "/makeoffer",
@@ -206,7 +283,11 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   reviewController.reviewGet
 );
-
+router.get(
+  "/conversations/messages",
+  passport.authenticate("jwt", { session: false }),
+  ConversationController.MessagesGet
+);
 router.post(
   "/conversations",
   passport.authenticate("jwt", { session: false }),
@@ -216,12 +297,6 @@ router.get(
   "/conversations/:toUserId",
   passport.authenticate("jwt", { session: false }),
   ConversationController.ConversationGet
-);
-
-router.get(
-  "/conversations/messages/:conversationId",
-  passport.authenticate("jwt", { session: false }),
-  ConversationController.MessagesGet
 );
 
 router.get(
@@ -263,6 +338,20 @@ router.post(
 
 router.post("/supportfaqs", supportFAQController.create);
 router.get("/supportfaqs", supportFAQController.fetch);
+
+router.post("/lhpics/:_id", testController.updatelineheights);
+
+// contract edit post
+router.post(
+  "/contracteditpost",
+  passport.authenticate("jwt", { session: false }),
+  contractEditController.contractEditPost
+);
+router.put(
+  "/contracteditaccept/:id",
+  passport.authenticate("jwt", { session: false }),
+  contractEditController.contractEditAccept
+);
 //********* API DOCUMENTATION **********
 router.use(
   "/docs/api.json",

@@ -9,8 +9,9 @@ let company = async function(req, res, next) {
   if (err) return ReE(res, "err finding company");
 
   if (!company) return ReE(res, "Company not found with id: " + company_id);
+
   let user, users_array;
-  debugger;
+
   user = req.user;
   //   users_array = company.users.map(obj => String(obj.user));
 

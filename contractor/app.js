@@ -34,9 +34,11 @@ app.use(express.static(path.join(__dirname, "public/images/uploads")));
 // being rendered res.render()
 app.set("views", path.join(__dirname, "views"));
 
+app.engine("ejs", require("ejs").renderFile);
+app.set("view engine", "ejs");
 // Set view engine as EJS
-app.engine("html", require("jade").renderFile);
-app.set("view engine", "html");
+// app.engine("html", require("jade").renderFile);
+// app.set("view engine", "html");
 
 // set limit of request uploading
 app.use(bodyParser.json({ limit: "1073741824" }));
@@ -44,7 +46,9 @@ app.use(bodyParser.urlencoded({ limit: "1073741824", extended: true }));
 
 app.use("/api", v1);
 // app.use('/api', job);
-
+app.get("/pay", function(req, res) {
+  res.render("payment");
+});
 app.use("/", function(req, res) {
   res.statusCode = 400; //send the appropriate status code
   res.json({

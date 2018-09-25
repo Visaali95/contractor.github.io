@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const supportSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.ObjectId, ref: "User" },
-    emailId: String,
-    ques: String
+    emailId: { type: String, default: "" },
+    ques: { type: String, default: "" }
   },
   { timestamps: true }
 );

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const jobTradeSchema = new mongoose.Schema(
   {
-    jobTrade: String
+    jobTrade: { type: String, default: "" }
   },
   { versionKey: false }
 );

@@ -1,5 +1,6 @@
 const { Company } = require("../models");
 const { to, ReE, ReS } = require("../services/util.service");
+const User = require("../models/user.model");
 var multer = require("multer");
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -12,7 +13,12 @@ var storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      file.fieldname + "-" + Date.now() + "." + file.mimetype.split("/")[1]
+      file.fieldname +
+        "-" +
+        Math.floor(Math.random() * 90000) +
+        10000 +
+        "." +
+        file.mimetype.split("/")[1]
     );
   },
   fileFilter: function(req, file, cb) {
@@ -35,7 +41,7 @@ var upload = multer({
 //   fileSize: 1024 * 1024 * 1024
 // }}).array()
 const create = async function(req, res) {
-  res.setHeader("Content-Type", "application/json");
+  //res.setHeader("Content-Type", "application/json");
   let err, company;
   console.log(req.body);
   upload(req, res, function(err) {
@@ -48,31 +54,40 @@ const create = async function(req, res) {
     if (err) {
       return ReE(res, err, 422);
     }
-    if (req.files) {
-      var logos = req.files.image;
+    var logos = req.files.image;
+    if (logos == undefined) {
+      company_info.logo = "";
+    } else
       logos.map((logo, i, logos) => {
         logos[i] = "http://18.222.231.171:8081/" + logo.filename;
       });
-      company_info.logo = logos;
+    company_info.logo = logos;
 
-      var pictures = [];
-      var photos = req.files.photos;
+    var pictures = [];
+    var photos = req.files.photos;
+    if (photos == undefined) {
+      company_info.pictures = [];
+    } else
       photos.map((photo, i) => {
         pictures.push("http://18.222.231.171:8081/" + photo.filename);
       });
-      company_info.pictures = pictures;
+    company_info.pictures = pictures;
 
-      //console.log(company_info);
-      Company.create(company_info, function(err, company) {
-        if (err) return ReE(res, err, 422);
-        return ReS(res, { company: company.toWeb() }, 201);
+    //console.log(company_info);
+    Company.create(company_info).then(company => {
+      return ReS(res, { company: company.toWeb() }, 201);
+    });
+    return User.findOneAndUpdate(
+      { _id: company_info.user },
+      { $set: { isSignUpCompany: true, userImg: company_info.logo } },
+      { new: true }
+    )
+      .then(user => {
+        return;
+      })
+      .catch(e => {
+        return ReE(res, err, 422);
       });
-    } else {
-      Company.create(company_info, function(err, company) {
-        if (err) return ReE(res, err, 422);
-        return ReS(res, { company: company.toWeb() }, 201);
-      });
-    }
   });
 };
 module.exports.create = create;

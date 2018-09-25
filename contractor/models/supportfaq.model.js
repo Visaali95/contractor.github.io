@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const supportFAQSchema = new mongoose.Schema(
   {
-    ques: String,
-    ans: String
+    ques: { type: String, default: "" },
+    ans: { type: String, default: "" }
   },
   { versionKey: false }
 );

@@ -4,7 +4,7 @@ const assignJobsSchema = new mongoose.Schema(
     fromUserId: { type: mongoose.Schema.ObjectId, ref: "User" },
     toUserId: { type: mongoose.Schema.ObjectId, ref: "User" },
     jobId: { type: mongoose.Schema.ObjectId, ref: "Jobs" },
-    lineItemId: String
+    lineItemId: { type: String, default: "" }
   },
   { timestamps: true }
 );

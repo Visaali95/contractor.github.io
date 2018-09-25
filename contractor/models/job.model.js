@@ -7,39 +7,43 @@ const lineHeightSchema = new mongoose.Schema(
     },
     jobTitle: {
       type: String,
-      required: true
+      default: ""
     },
     floorLevel: {
       type: String,
-      required: true
+      default: ""
     },
     jobTrade: {
       type: String,
-      required: true
+      default: ""
     },
     jobWork: {
       type: String,
-      required: true
+      default: ""
     },
-    desc: {
-      type: String
-    },
+    desc: { type: String, default: "" },
     isFixed: {
       type: Number,
-      enum: [0, 1] // 0 - hourly 1- fixed
+      enum: [0, 1]
+      // 0 - hourly 1- fixed
     },
     fixedCost: {
-      type: Number
+      type: Number,
+      default: 0
     },
     hourlyCost: {
-      type: Number
+      type: Number,
+      default: 0
     },
     hourlyTotal: {
-      type: Number
+      type: Number,
+      default: 0
     },
     hourlyDuration: {
-      type: Number
-    }
+      type: Number,
+      default: 0
+    },
+    lineItemPics: { type: [String] }
   },
   {
     versionKey: false
@@ -53,7 +57,7 @@ const addRoomsSchema = new mongoose.Schema(
     },
     details: {
       type: String,
-      required: true
+      default: ""
     }
   },
   { versionKey: false }
@@ -68,7 +72,8 @@ const JobSchema = new mongoose.Schema(
     jobTitle: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      default: ""
     },
     isQuote: {
       type: Number,
@@ -94,7 +99,8 @@ const JobSchema = new mongoose.Schema(
     propertyType: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      default: ""
     },
     jobStart: {
       type: Date,
@@ -111,6 +117,7 @@ const JobSchema = new mongoose.Schema(
       required: true,
       enum: [1, 2]
     }, //interior - 1 or exterrior - 2
+
     isNewConstruction: {
       type: Number,
       required: true,
@@ -120,12 +127,13 @@ const JobSchema = new mongoose.Schema(
       type: Number,
       required: true,
       enum: [1, 2]
+
       //occupied - 1 or vacant - 2
     }, //new construction - 1 or renovation - 2
-    matsupplied: String,
-    matsupDetails: String, //if partial take input fileds(all - 1 partial - 2 ,none - 3)
-    toolsupplied: String,
-    toolsupDetails: String, //if partial take input fileds(all - 1 partial - 2 ,none - 3),//if partial take input fileds(all - 1,partial - 2 ,none - 3)
+    matsupplied: { type: String, default: "" },
+    matsupDetails: { type: String, default: "" }, //if partial take input fileds(all - 1 partial - 2 ,none - 3)
+    toolsupplied: { type: String, default: "" },
+    toolsupDetails: { type: String, default: "" }, //if partial take input fileds(all - 1 partial - 2 ,none - 3),//if partial take input fileds(all - 1,partial - 2 ,none - 3)
     isPostAs: {
       type: Number,
       enum: [1, 2]
@@ -138,8 +146,9 @@ const JobSchema = new mongoose.Schema(
     lineHeight: [lineHeightSchema],
     jobStatus: {
       type: String,
-      enum: ["posted", "ongoing", "completed", "incomplete"]
-    }
+      enum: ["posted", "ongoing", "completed", "deactivated"]
+    },
+    jobCost: { type: Number, default: 0 }
   },
 
   { timestamps: true, versionKey: false }

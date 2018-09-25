@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
-    message: String
+    message: { type: String, default: "" }
   },
   { timestamps: true, versionKey: false }
 );
@@ -12,7 +12,7 @@ const ChatSchema = new mongoose.Schema(
     fromUserId: { type: mongoose.Schema.ObjectId, ref: "User" },
     toUserId: { type: mongoose.Schema.ObjectId, ref: "User" },
     messages: [messageSchema],
-    file: String
+    file: { type: String, default: "" }
   },
   { timestamps: true }
 );

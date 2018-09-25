@@ -4,21 +4,21 @@ const { TE, to } = require("../services/util.service");
 
 let CompanySchema = mongoose.Schema(
   {
-    name: { type: String },
+    name: { type: String, default: "" },
     user: { type: mongoose.Schema.ObjectId, ref: "User" },
-    location: { type: String },
-    postcode: { type: String },
-    domain: { type: String },
+    location: { type: String, default: "" },
+    postcode: { type: String, default: "" },
+    domain: { type: String, default: "" },
     ratings: { type: Number, enum: [1, 2, 3, 4, 5] },
-    logo: { type: String },
-    pictures: { type: [String] },
-    companyAbout: { type: String },
-    companySocial: { type: String },
+    logo: { type: String, default: "" },
+    pictures: { type: [String], default: [] },
+    companyAbout: { type: String, default: "" },
+    companySocial: { type: String, default: "" },
     isLicense: {
       type: Number,
       enum: [0, 1]
     },
-    companyLicense: { type: String }
+    companyLicense: { type: String, default: "" }
   },
   { timestamps: true }
 );
